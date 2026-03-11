@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trendyol Gulf LTA — Assignment Process Flow</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* ── Password Gate ── */
+  #password-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: linear-gradient(135deg, #1B1C31 0%, #2D2E4A 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', -apple-system, sans-serif;
+  }
+  #password-gate.hidden { display: none; }
+  .gate-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 48px 44px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    backdrop-filter: blur(12px);
+  }
+  .gate-box .lock-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: rgba(64,174,188,0.15);
+    border: 1px solid rgba(64,174,188,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 24px;
+  }
+  .gate-box h2 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .gate-box h2 span { color: #40AEBC; }
+  .gate-box p {
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+  .gate-box input {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .gate-box input::placeholder { color: rgba(255,255,255,0.3); }
+  .gate-box input:focus { border-color: #40AEBC; }
+  .gate-box button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #40AEBC;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .gate-box button:hover { background: #36969f; }
+  .gate-error {
+    color: #BD4040;
+    font-size: 12px;
+    margin-top: 12px;
+    min-height: 18px;
+  }
+  .gate-footer {
+    margin-top: 24px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+  }
+  .gate-footer strong { color: #40AEBC; }
+  #main-content { display: none; }
+  #main-content.visible { display: block; }
+
+  :root {
+    --teal: #40AEBC;
+    --indigo: #1B1C31;
+    --pastel-blue: #EDF5FF;
+    --light-grey: #EEEEEE;
+    --red: #BD4040;
+    --gold: #BD8941;
+    --hrbp: #4A90D9;
+    --mobility: #40AEBC;
+    --vendor: #E67E22;
+    --assignee: #8E44AD;
+    --system: #95A5A6;
+    --hrbp-bg: #EBF3FC;
+    --mobility-bg: #E8F8FA;
+    --vendor-bg: #FDF2E9;
+    --assignee-bg: #F5EEF8;
+    --system-bg: #F2F3F4;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #F8FAFB;
+    color: var(--indigo);
+    line-height: 1.5;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, var(--indigo) 0%, #2D2E4A 100%);
+    padding: 40px 60px 36px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(64,174,188,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .header h1 span { color: var(--teal); }
+  .header p {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+  .header .badge {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 14px;
+    background: rgba(64,174,188,0.2);
+    border: 1px solid rgba(64,174,188,0.4);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--teal);
+  }
+
+  /* ── Legend ── */
+  .legend-bar {
+    display: flex;
+    gap: 24px;
+    padding: 16px 60px;
+    background: white;
+    border-bottom: 1px solid #E8ECF0;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .legend-bar .label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #999;
+    margin-right: 8px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+  .legend-dot.hrbp { background: var(--hrbp); }
+  .legend-dot.mobility { background: var(--mobility); }
+  .legend-dot.vendor { background: var(--vendor); }
+  .legend-dot.assignee { background: var(--assignee); }
+  .legend-dot.system { background: var(--system); }
+
+  .alert-legend {
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+    align-items: center;
+  }
+  .alert-legend .alert-icon {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #666;
+  }
+
+  /* ── Main content ── */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 60px 80px;
+  }
+
+  /* ── Phase ── */
+  .phase {
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .phase-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--indigo);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .phase-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--indigo);
+  }
+  .phase-subtitle {
+    font-size: 13px;
+    color: #888;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+
+  /* ── Steps grid ── */
+  .steps-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    position: relative;
+  }
+
+  .step-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .step-card {
+    width: 220px;
+    background: white;
+    border-radius: 12px;
+    padding: 16px 18px;
+    border-left: 4px solid transparent;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    transition: all 0.2s ease;
+    position: relative;
+    cursor: default;
+  }
+  .step-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  .step-card.hrbp { border-left-color: var(--hrbp); }
+  .step-card.mobility { border-left-color: var(--mobility); }
+  .step-card.vendor { border-left-color: var(--vendor); }
+  .step-card.assignee { border-left-color: var(--assignee); }
+  .step-card.system { border-left-color: var(--system); }
+
+  .step-owner {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .step-owner.hrbp { color: var(--hrbp); }
+  .step-owner.mobility { color: var(--mobility); }
+  .step-owner.vendor { color: var(--vendor); }
+  .step-owner.assignee { color: var(--assignee); }
+  .step-owner.system { color: var(--system); }
+
+  .step-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--indigo);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .step-detail {
+    font-size: 11px;
+    color: #777;
+    line-height: 1.4;
+  }
+  .step-fields {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #F0F0F0;
+  }
+  .step-field {
+    font-size: 10px;
+    color: #999;
+    padding: 1px 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .step-field::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #DDD;
+    flex-shrink: 0;
+  }
+
+  /* Alert badge */
+  .alert-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 14px;
+    cursor: help;
+  }
+
+  /* Arrow connector */
+  .arrow {
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #CCC;
+    flex-shrink: 0;
+  }
+  .arrow svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ── Phase connector ── */
+  .phase-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0;
+    color: #CCC;
+  }
+  .phase-connector svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* ── Reminder panel ── */
+  .reminder-panel {
+    margin-top: 8px;
+    background: #FFFBF0;
+    border: 1px solid #F5E6C8;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 11px;
+    color: #8B6914;
+    display: none;
+  }
+  .reminder-panel.visible {
+    display: block;
+  }
+  .reminder-panel strong {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 11px;
+  }
+
+  /* ── Swim lane summary ── */
+  .swimlane-summary {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    margin-top: 48px;
+  }
+  .swimlane-summary h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--indigo);
+  }
+  .swimlane-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .swimlane-card {
+    border-radius: 10px;
+    padding: 20px;
+    border-top: 3px solid;
+  }
+  .swimlane-card.hrbp { background: var(--hrbp-bg); border-color: var(--hrbp); }
+  .swimlane-card.mobility { background: var(--mobility-bg); border-color: var(--mobility); }
+  .swimlane-card.vendor { background: var(--vendor-bg); border-color: var(--vendor); }
+  .swimlane-card.assignee { background: var(--assignee-bg); border-color: var(--assignee); }
+
+  .swimlane-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .swimlane-card.hrbp h3 { color: var(--hrbp); }
+  .swimlane-card.mobility h3 { color: var(--mobility); }
+  .swimlane-card.vendor h3 { color: var(--vendor); }
+  .swimlane-card.assignee h3 { color: var(--assignee); }
+
+  .swimlane-card ul {
+    list-style: none;
+    font-size: 12px;
+    color: #555;
+  }
+  .swimlane-card li {
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+  .swimlane-card li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .swimlane-card.hrbp li::before { background: var(--hrbp); }
+  .swimlane-card.mobility li::before { background: var(--mobility); }
+  .swimlane-card.vendor li::before { background: var(--vendor); }
+  .swimlane-card.assignee li::before { background: var(--assignee); }
+
+  /* ── Automation Opportunities ── */
+  .automation-section {
+    background: linear-gradient(135deg, var(--indigo) 0%, #2D2E4A 100%);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 32px;
+    color: white;
+  }
+  .automation-section h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .automation-section .sub {
+    font-size: 13px;
+    opacity: 0.6;
+    margin-bottom: 24px;
+  }
+  .auto-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .auto-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .auto-card h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teal);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .auto-card p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 12px;
+    color: #999;
+  }
+  .footer strong { color: var(--teal); }
+
+  /* ── Toggle ── */
+  .toggle-btn {
+    background: none;
+    border: 1px solid #DDD;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: #888;
+    cursor: pointer;
+    margin-top: 8px;
+    font-family: inherit;
+  }
+  .toggle-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+  @media (max-width: 1200px) {
+    .swimlane-grid { grid-template-columns: repeat(2, 1fr); }
+    .auto-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .header, .legend-bar, .container { padding-left: 24px; padding-right: 24px; }
+    .swimlane-grid { grid-template-columns: 1fr; }
+    .auto-grid { grid-template-columns: 1fr; }
+    .step-card { width: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ PASSWORD GATE ═══════════════ -->
+<div id="password-gate">
+  <div class="gate-box">
+    <div class="lock-icon">&#128274;</div>
+    <h2>Trendyol Gulf <span>LTA</span></h2>
+    <p>This document is confidential. Please enter the access code.</p>
+    <form id="gate-form" onsubmit="return checkPassword()">
+      <input type="password" id="gate-password" placeholder="Enter access code" autocomplete="off" autofocus />
+      <button type="submit">Unlock</button>
+    </form>
+    <div class="gate-error" id="gate-error"></div>
+    <div class="gate-footer">Prepared by <strong>The Cozm</strong></div>
+  </div>
+</div>
+
+<div id="main-content">
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="header">
+  <h1>Trendyol Gulf LTA — <span>Assignment Process Flow</span></h1>
+  <p>Long-Term Assignment lifecycle: Turkey &rarr; UAE / KSA &nbsp;|&nbsp; Prepared by The Cozm</p>
+  <div class="badge">41 tracked fields &middot; 5 stakeholder groups &middot; 24 automated alerts</div>
+</div>
+
+<!-- ═══════════════ LEGEND ═══════════════ -->
+<div class="legend-bar">
+  <span class="label">Owners</span>
+  <div class="legend-item"><div class="legend-dot hrbp"></div>HRBP</div>
+  <div class="legend-item"><div class="legend-dot mobility"></div>Mobility Team</div>
+  <div class="legend-item"><div class="legend-dot vendor"></div>Immigration / Relocation Vendor</div>
+  <div class="legend-item"><div class="legend-dot assignee"></div>Assignee</div>
+  <div class="legend-item"><div class="legend-dot system"></div>System / Auto</div>
+  <div class="alert-legend">
+    <div class="alert-icon">&#9200; = Timed reminder</div>
+    <div class="alert-icon">&#9888;&#65039; = Escalation trigger</div>
+  </div>
+</div>
+
+<!-- ═══════════════ PROCESS FLOW ═══════════════ -->
+<div class="container">
+
+  <!-- ── PHASE 1: Initiation ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">1</div>
+      <div>
+        <div class="phase-title">Assignment Initiation</div>
+        <span class="phase-subtitle">HRBP confirms assignment, Mobility Team sets up tracker</span>
+      </div>
+    </div>
+    <div class="steps-flow">
+      <div class="step-wrapper">
+        <div class="step-card hrbp">
+          <div class="step-owner hrbp">&#9679; HRBP</div>
+          <div class="step-name">Assignment Confirmed</div>
+          <div class="step-detail">HRBP confirms employee, home/host country, division, job title, and assignment duration</div>
+          <div class="step-fields">
+            <div class="step-field">Employee Name, ID</div>
+            <div class="step-field">Home / Host Country</div>
+            <div class="step-field">Division, Job Title</div>
+            <div class="step-field">Assignment Duration</div>
+            <div class="step-field">Start / End Date (Planned)</div>
+          </div>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card mobility">
+          <div class="step-owner mobility">&#9679; Mobility Team</div>
+          <div class="step-name">Offer Issued</div>
+          <div class="step-detail">Mobility Team prepares and sends assignment offer to employee</div>
+          <div class="step-fields">
+            <div class="step-field">Offer Given Date</div>
+            <div class="step-field">Offer Signed Date</div>
+          </div>
+          <span class="alert-badge" title="Alert if offer not signed within 14 days">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card mobility">
+          <div class="step-owner mobility">&#9679; Mobility Team</div>
+          <div class="step-name">Vendor & Team Assignment</div>
+          <div class="step-detail">Assign relocation vendor, immigration vendor, and mobility responsible person</div>
+          <div class="step-fields">
+            <div class="step-field">Relocation Vendor</div>
+            <div class="step-field">Immigration Vendor</div>
+            <div class="step-field">Mobility Responsible</div>
+          </div>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card mobility">
+          <div class="step-owner mobility">&#9679; Mobility Team</div>
+          <div class="step-name">Mobility Intro Call</div>
+          <div class="step-detail">Introductory call with assignee to explain the relocation process and next steps</div>
+          <div class="step-fields">
+            <div class="step-field">Mobility Intro Call Completed</div>
+          </div>
+          <span class="alert-badge" title="Remind if not completed within 3 days of offer signed">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card mobility">
+          <div class="step-owner mobility">&#9679; Mobility Team</div>
+          <div class="step-name">Vendor Introduction</div>
+          <div class="step-detail">Connect assignee with immigration and relocation vendors</div>
+          <div class="step-fields">
+            <div class="step-field">Vendor Introduced</div>
+          </div>
+          <span class="alert-badge" title="Remind if not done within 5 days of intro call">&#9200;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-connector"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7l7 7 7-7"/></svg></div>
+
+  <!-- ── PHASE 2: Document Collection & Attestation ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">2</div>
+      <div>
+        <div class="phase-title">Document Collection & Attestation</div>
+        <span class="phase-subtitle">Mobility Team collects documents, vendor handles attestation</span>
+      </div>
+    </div>
+    <div class="steps-flow">
+      <div class="step-wrapper">
+        <div class="step-card mobility">
+          <div class="step-owner mobility">&#9679; Mobility Team</div>
+          <div class="step-name">Document Collection</div>
+          <div class="step-detail">Collect passport, education certificates, photos, family book (aile cuzdani), and other required documents from assignee</div>
+          <div class="step-fields">
+            <div class="step-field">Documents Collected (Y/N)</div>
+          </div>
+          <span class="alert-badge" title="Remind assignee every 5 days for missing documents">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card vendor">
+          <div class="step-owner vendor">&#9679; Immigration Vendor</div>
+          <div class="step-name">Document Attestation</div>
+          <div class="step-detail">Vendor attests documents with Turkish authorities and UAE embassy. For KSA: handled by Mobility Team via outsource vendor.</div>
+          <div class="step-fields">
+            <div class="step-field">Document Attestation Status</div>
+            <div class="step-field">Attestation Start Date</div>
+            <div class="step-field">Attestation Completion Date</div>
+          </div>
+          <span class="alert-badge" title="Escalation if in progress > 21 days">&#9888;&#65039;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-connector"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7l7 7 7-7"/></svg></div>
+
+  <!-- ── PHASE 3: Entry Permit & Travel ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">3</div>
+      <div>
+        <div class="phase-title">Entry Permit & Travel</div>
+        <span class="phase-subtitle">Vendor applies for entry permit, assignee books travel</span>
+      </div>
+    </div>
+    <div class="steps-flow">
+      <div class="step-wrapper">
+        <div class="step-card vendor">
+          <div class="step-owner vendor">&#9679; Immigration Vendor</div>
+          <div class="step-name">Entry Permit Application</div>
+          <div class="step-detail">Vendor applies for entry permit / visit visa with host country authorities</div>
+          <div class="step-fields">
+            <div class="step-field">Entry Permit Status</div>
+            <div class="step-field">Entry Permit Applied Date</div>
+            <div class="step-field">Entry Permit Issued Date</div>
+          </div>
+          <span class="alert-badge" title="Escalation if pending > 21 days after application">&#9888;&#65039;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card assignee">
+          <div class="step-owner assignee">&#9679; Assignee</div>
+          <div class="step-name">Book Flight</div>
+          <div class="step-detail">Assignee books flight once entry permit is issued</div>
+          <div class="step-fields">
+            <div class="step-field">Flight Booked (Y/N + Date)</div>
+          </div>
+          <span class="alert-badge" title="Remind if not booked within 7 days of entry permit">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card assignee">
+          <div class="step-owner assignee">&#9679; Assignee</div>
+          <div class="step-name">Arrival in Host Country</div>
+          <div class="step-detail">Assignee arrives in UAE / KSA — triggers in-country processing</div>
+          <div class="step-fields">
+            <div class="step-field">Arrival in UAE/KSA Date</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-connector"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7l7 7 7-7"/></svg></div>
+
+  <!-- ── PHASE 4: In-Country Processing ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">4</div>
+      <div>
+        <div class="phase-title">In-Country Processing</div>
+        <span class="phase-subtitle">Medical, biometrics, labour contract, residency visa — vendor-led</span>
+      </div>
+    </div>
+    <div class="steps-flow">
+      <div class="step-wrapper">
+        <div class="step-card vendor">
+          <div class="step-owner vendor">&#9679; Immigration Vendor</div>
+          <div class="step-name">Medical Examination</div>
+          <div class="step-detail">Vendor arranges mandatory medical examination for the assignee</div>
+          <div class="step-fields">
+            <div class="step-field">Medical Completion Date</div>
+          </div>
+          <span class="alert-badge" title="Alert if not completed within 7 days of arrival">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card vendor">
+          <div class="step-owner vendor">&#9679; Immigration Vendor</div>
+          <div class="step-name">Biometrics</div>
+          <div class="step-detail">Vendor arranges biometrics appointment and submission</div>
+          <div class="step-fields">
+            <div class="step-field">Biometrics Completion Date</div>
+          </div>
+          <span class="alert-badge" title="Alert if not completed within 14 days of arrival">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card vendor">
+          <div class="step-owner vendor">&#9679; Immigration Vendor</div>
+          <div class="step-name">Labour Contract Signed</div>
+          <div class="step-detail">Labour contract drafted and signed by assignee and employer in host country</div>
+          <div class="step-fields">
+            <div class="step-field">Labour Contract Signed (Y/N)</div>
+          </div>
+          <span class="alert-badge" title="Alert if not signed within 14 days of arrival">&#9888;&#65039;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card vendor">
+          <div class="step-owner vendor">&#9679; Immigration Vendor</div>
+          <div class="step-name">Residency Visa / Iqama</div>
+          <div class="step-detail">Vendor applies for residency visa (UAE) or Iqama (KSA)</div>
+          <div class="step-fields">
+            <div class="step-field">Residency Visa Status</div>
+            <div class="step-field">Residency Visa Issued Date</div>
+          </div>
+          <span class="alert-badge" title="Escalation if pending > 30 days after application">&#9888;&#65039;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-connector"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7l7 7 7-7"/></svg></div>
+
+  <!-- ── PHASE 5: Emirates ID & Settlement ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">5</div>
+      <div>
+        <div class="phase-title">Emirates ID & Settlement</div>
+        <span class="phase-subtitle">Final setup: ID, banking, housing, payroll, insurance</span>
+      </div>
+    </div>
+    <div class="steps-flow">
+      <div class="step-wrapper">
+        <div class="step-card vendor">
+          <div class="step-owner vendor">&#9679; Immigration Vendor</div>
+          <div class="step-name">Emirates ID / National ID</div>
+          <div class="step-detail">Vendor tracks Emirates ID (UAE) or National ID (KSA) application and receipt</div>
+          <div class="step-fields">
+            <div class="step-field">Emirates ID Status</div>
+            <div class="step-field">Emirates ID Received Date</div>
+            <div class="step-field">Travel Restriction Active (Y/N)</div>
+          </div>
+          <span class="alert-badge" title="Alert if not received within 30 days of visa issue">&#9888;&#65039;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card assignee">
+          <div class="step-owner assignee">&#9679; Assignee</div>
+          <div class="step-name">Open Bank Account</div>
+          <div class="step-detail">Assignee opens local bank account (requires Emirates ID)</div>
+          <div class="step-fields">
+            <div class="step-field">Bank Account Opened (Y/N)</div>
+          </div>
+          <span class="alert-badge" title="Remind 14 days after Emirates ID received">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card vendor">
+          <div class="step-owner vendor">&#9679; Relocation Vendor</div>
+          <div class="step-name">Accommodation</div>
+          <div class="step-detail">Vendor arranges temporary accommodation pre-arrival, then supports permanent housing</div>
+          <div class="step-fields">
+            <div class="step-field">Temp Accommodation Arranged</div>
+            <div class="step-field">Permanent Housing Secured</div>
+          </div>
+          <span class="alert-badge" title="Temp: 7 days before arrival. Perm: 30 days after arrival.">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card mobility">
+          <div class="step-owner mobility">&#9679; Mobility Team</div>
+          <div class="step-name">Payroll & Insurance</div>
+          <div class="step-detail">Mobility Team sets up host-country payroll and activates health insurance</div>
+          <div class="step-fields">
+            <div class="step-field">Payroll Setup (UAE/KSA)</div>
+            <div class="step-field">Health Insurance Activated</div>
+          </div>
+          <span class="alert-badge" title="Payroll: 7 days after bank account. Insurance: 7 days after arrival.">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card system">
+          <div class="step-owner system">&#9679; System / Auto</div>
+          <div class="step-name">Assignment Complete</div>
+          <div class="step-detail">All milestones confirmed — status auto-updates to "Done"</div>
+          <div class="step-fields">
+            <div class="step-field">Overall Assignment Status</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-connector"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7l7 7 7-7"/></svg></div>
+
+  <!-- ── PHASE 6: Ongoing Monitoring ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">6</div>
+      <div>
+        <div class="phase-title">Ongoing Monitoring & Renewal</div>
+        <span class="phase-subtitle">Continuous tracking of expiry dates with automated alerts</span>
+      </div>
+    </div>
+    <div class="steps-flow">
+      <div class="step-wrapper">
+        <div class="step-card system" style="width: 260px;">
+          <div class="step-owner system">&#9679; System / Auto</div>
+          <div class="step-name">Visa Expiry Monitoring</div>
+          <div class="step-detail">Automated alerts to Mobility Team + Immigration Vendor at 90, 60, 30, and 14 days before residency visa expiry</div>
+          <span class="alert-badge" title="Automated Slack + Email at 90/60/30/14 days">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card system" style="width: 260px;">
+          <div class="step-owner system">&#9679; System / Auto</div>
+          <div class="step-name">Labour Contract Expiry</div>
+          <div class="step-detail">Automated alerts to HRBP + Mobility Team at 90, 60, 30 days before labour contract end date</div>
+          <span class="alert-badge" title="Automated Slack + Email at 90/60/30 days">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card system" style="width: 260px;">
+          <div class="step-owner system">&#9679; System / Auto</div>
+          <div class="step-name">Assignment End Monitoring</div>
+          <div class="step-detail">Automated alerts to HRBP, Mobility Team, and Assignee at 90, 60, 30 days before planned assignment end. Triggers extension or repatriation planning.</div>
+          <span class="alert-badge" title="Automated Email at 90/60/30 days">&#9200;</span>
+        </div>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
+      <div class="step-wrapper">
+        <div class="step-card system" style="width: 260px;">
+          <div class="step-owner system">&#9679; System / Auto</div>
+          <div class="step-name">Travel Restriction Lift</div>
+          <div class="step-detail">Notify Mobility Team + Assignee when travel restriction period ends (typically 6 months from visa issue)</div>
+          <span class="alert-badge" title="Automated notification when restriction lifts">&#9200;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SWIM LANE SUMMARY ═══════════════ -->
+  <div class="swimlane-summary">
+    <h2>Responsibility Summary by Stakeholder</h2>
+    <div class="swimlane-grid">
+      <div class="swimlane-card hrbp">
+        <h3>HRBP</h3>
+        <ul>
+          <li>Confirm employee profile &amp; assignment terms</li>
+          <li>Set assignment duration &amp; dates</li>
+          <li>Approve extension or repatriation</li>
+          <li>Respond to contract expiry alerts</li>
+        </ul>
+      </div>
+      <div class="swimlane-card mobility">
+        <h3>Mobility Team</h3>
+        <ul>
+          <li>Issue offer &amp; track signing</li>
+          <li>Assign vendors &amp; mobility responsible</li>
+          <li>Conduct intro call &amp; introduce vendors</li>
+          <li>Collect documents from assignee</li>
+          <li>Set up payroll &amp; health insurance</li>
+          <li>Coordinate with all stakeholders</li>
+        </ul>
+      </div>
+      <div class="swimlane-card vendor">
+        <h3>Immigration / Relocation Vendor</h3>
+        <ul>
+          <li>Document attestation (UAE: vendor; KSA: outsourced)</li>
+          <li>Entry permit application &amp; tracking</li>
+          <li>Medical, biometrics, labour contract</li>
+          <li>Residency visa / Iqama application</li>
+          <li>Emirates ID / National ID tracking</li>
+          <li>Temporary &amp; permanent accommodation</li>
+          <li>Visa renewal &amp; extensions</li>
+        </ul>
+      </div>
+      <div class="swimlane-card assignee">
+        <h3>Assignee</h3>
+        <ul>
+          <li>Sign offer letter</li>
+          <li>Provide required documents</li>
+          <li>Book flight after entry permit</li>
+          <li>Confirm arrival date</li>
+          <li>Open bank account (post Emirates ID)</li>
+          <li>Secure permanent housing (with vendor)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ AUTOMATION OPPORTUNITIES ═══════════════ -->
+  <div class="automation-section">
+    <h2>Automation Opportunities</h2>
+    <p class="sub">What The Cozm can automate to eliminate manual tracking and missed deadlines</p>
+    <div class="auto-grid">
+      <div class="auto-card">
+        <h4>&#128276; Slack / Email Reminders</h4>
+        <p>Automated alerts for visa expiry, document deadlines, contract renewals, and housing setup — sent to the right person at the right time via Slack or email.</p>
+      </div>
+      <div class="auto-card">
+        <h4>&#128260; Status Auto-Progression</h4>
+        <p>When a milestone is completed (e.g., entry permit issued), the next step is automatically triggered and the responsible party notified — no manual handover.</p>
+      </div>
+      <div class="auto-card">
+        <h4>&#128200; Real-Time Dashboard</h4>
+        <p>Replace the flat Google Sheet with a visual dashboard showing each assignee's progress, overdue items, and upcoming deadlines at a glance.</p>
+      </div>
+      <div class="auto-card">
+        <h4>&#128231; Vendor Escalation</h4>
+        <p>Auto-email immigration vendors (Fragomen, EER, Tamimi) when attestation, permits, or visas are delayed beyond threshold — with pre-drafted escalation templates.</p>
+      </div>
+      <div class="auto-card">
+        <h4>&#128197; Calendar Integration</h4>
+        <p>Key dates (assignment end, visa expiry, contract renewal) pushed directly into HRBP and Mobility Team calendars with advance reminders.</p>
+      </div>
+      <div class="auto-card">
+        <h4>&#129302; AI Query Responder</h4>
+        <p>Auto-reply to common Slack/email questions like "What is Employee X's visa status?" or "When does Y's contract expire?" — pulling live data from the tracker.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Prepared by <strong>The Cozm</strong> &nbsp;|&nbsp; 11 March 2026 &nbsp;|&nbsp; Confidential — Trendyol Global Mobility
+</div>
+
+</div><!-- end #main-content -->
+
+<script>
+function checkPassword() {
+  var input = document.getElementById('gate-password').value;
+  // SHA-256 hash of the password for basic obfuscation
+  var correctHash = '43133e4a51636ae6e6700b1a79a9df55ca302d1e491dc57ecee6eb86c58a23d8';
+  crypto.subtle.digest('SHA-256', new TextEncoder().encode(input)).then(function(buf) {
+    var hash = Array.from(new Uint8Array(buf)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+    if (hash === correctHash) {
+      document.getElementById('password-gate').classList.add('hidden');
+      document.getElementById('main-content').classList.add('visible');
+      sessionStorage.setItem('trendyol-lta-auth', 'true');
+    } else {
+      document.getElementById('gate-error').textContent = 'Incorrect access code. Please try again.';
+      document.getElementById('gate-password').value = '';
+      document.getElementById('gate-password').focus();
+    }
+  });
+  return false;
+}
+// Restore session if already authenticated
+if (sessionStorage.getItem('trendyol-lta-auth') === 'true') {
+  document.getElementById('password-gate').classList.add('hidden');
+  document.getElementById('main-content').classList.add('visible');
+}
+</script>
+
+</body>
+</html>
