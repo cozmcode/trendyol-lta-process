@@ -629,23 +629,28 @@
   /* ── Page Navigation ── */
   .page-nav {
     display: flex;
-    gap: 8px;
-    padding: 10px 60px;
+    gap: 6px;
+    padding: 12px 60px;
     background: var(--indigo);
     border-bottom: 1px solid rgba(255,255,255,0.08);
   }
   .page-nav a {
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: 600;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,0.45);
     text-decoration: none;
     font-family: 'Inter', -apple-system, sans-serif;
     transition: all 0.2s ease;
+    border: 1px solid transparent;
   }
-  .page-nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
-  .page-nav a.active { color: #fff; background: rgba(64,174,188,0.2); }
+  .page-nav a svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .page-nav a:hover { color: #fff; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.08); }
+  .page-nav a.active { color: #fff; background: rgba(64,174,188,0.18); border-color: rgba(64,174,188,0.3); }
 </style>
 </head>
 <body>
@@ -678,8 +683,14 @@
 </div>
 
 <nav class="page-nav">
-  <a href="LTA_Process_Flow.html" class="active">Process Flow</a>
-  <a href="Immigration_Dashboard.html">Immigration Tracker</a>
+  <a href="LTA_Process_Flow.html" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Process Flow
+  </a>
+  <a href="Immigration_Dashboard.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    Immigration Tracker
+  </a>
 </nav>
 
 <!-- ═══════════════ LEGEND ═══════════════ -->
