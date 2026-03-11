@@ -858,6 +858,31 @@
   </div>
 </div>
 
+<script>
+function checkGatePassword() {
+    var input = document.getElementById('gate-password').value;
+    var correctHash = '43133e4a51636ae6e6700b1a79a9df55ca302d1e491dc57ecee6eb86c58a23d8';
+    crypto.subtle.digest('SHA-256', new TextEncoder().encode(input)).then(function(buf) {
+        var hash = Array.from(new Uint8Array(buf)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+        if (hash === correctHash) {
+            document.getElementById('password-gate').classList.add('hidden');
+            document.getElementById('app-content').classList.add('visible');
+            sessionStorage.setItem('trendyol-lta-auth', 'true');
+            if (typeof initDashboard === 'function') initDashboard();
+        } else {
+            document.getElementById('gate-error').textContent = 'Incorrect access code. Please try again.';
+            document.getElementById('gate-password').value = '';
+            document.getElementById('gate-password').focus();
+        }
+    });
+    return false;
+}
+if (sessionStorage.getItem('trendyol-lta-auth') === 'true') {
+    document.getElementById('password-gate').classList.add('hidden');
+    document.getElementById('app-content').classList.add('visible');
+}
+</script>
+
 <div id="app-content">
 <aside class="sidebar">
     <div class="brand">
@@ -1332,26 +1357,6 @@
     }
 
     // Initialize
-    // Password Gate
-    function checkGatePassword() {
-        var input = document.getElementById('gate-password').value;
-        var correctHash = '43133e4a51636ae6e6700b1a79a9df55ca302d1e491dc57ecee6eb86c58a23d8';
-        crypto.subtle.digest('SHA-256', new TextEncoder().encode(input)).then(function(buf) {
-            var hash = Array.from(new Uint8Array(buf)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
-            if (hash === correctHash) {
-                document.getElementById('password-gate').classList.add('hidden');
-                document.getElementById('app-content').classList.add('visible');
-                sessionStorage.setItem('trendyol-lta-auth', 'true');
-                initDashboard();
-            } else {
-                document.getElementById('gate-error').textContent = 'Incorrect access code. Please try again.';
-                document.getElementById('gate-password').value = '';
-                document.getElementById('gate-password').focus();
-            }
-        });
-        return false;
-    }
-
     function initDashboard() {
         renderTable();
         renderGantt();
@@ -1360,10 +1365,8 @@
         renderDonut();
     }
 
-    // Restore session
+    // Init if already authenticated
     if (sessionStorage.getItem('trendyol-lta-auth') === 'true') {
-        document.getElementById('password-gate').classList.add('hidden');
-        document.getElementById('app-content').classList.add('visible');
         initDashboard();
     }
 </script>
