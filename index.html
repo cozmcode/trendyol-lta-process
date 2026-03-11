@@ -623,7 +623,29 @@
     .swimlane-grid { grid-template-columns: 1fr; }
     .auto-grid { grid-template-columns: 1fr; }
     .step-card { width: 180px; }
+    .page-nav { padding: 10px 24px; }
   }
+
+  /* ── Page Navigation ── */
+  .page-nav {
+    display: flex;
+    gap: 8px;
+    padding: 10px 60px;
+    background: var(--indigo);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .page-nav a {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-family: 'Inter', -apple-system, sans-serif;
+    transition: all 0.2s ease;
+  }
+  .page-nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+  .page-nav a.active { color: #fff; background: rgba(64,174,188,0.2); }
 </style>
 </head>
 <body>
@@ -654,6 +676,11 @@
   <p data-i18n="header.subtitle">Long-Term Assignment lifecycle: Turkey &rarr; UAE / KSA &nbsp;|&nbsp; Prepared by The Cozm</p>
   <div class="badge" data-i18n="header.badge">41 tracked fields &middot; 5 stakeholder groups &middot; 24 automated alerts</div>
 </div>
+
+<nav class="page-nav">
+  <a href="LTA_Process_Flow.html" class="active">Process Flow</a>
+  <a href="Immigration_Dashboard.html">Immigration Tracker</a>
+</nav>
 
 <!-- ═══════════════ LEGEND ═══════════════ -->
 <div class="legend-bar">
