@@ -170,12 +170,16 @@
   /* ── Legend ── */
   .legend-bar {
     display: flex;
-    gap: 24px;
-    padding: 16px 60px;
+    gap: 12px;
+    padding: 12px 60px;
     background: white;
     border-bottom: 1px solid #E8ECF0;
     flex-wrap: wrap;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
   .legend-bar .label {
     font-size: 11px;
@@ -191,11 +195,54 @@
     gap: 8px;
     font-size: 13px;
     font-weight: 500;
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: all 0.25s ease;
+    user-select: none;
   }
+  .legend-item:hover {
+    background: #F0F4F8;
+  }
+  .legend-item.active {
+    border-color: currentColor;
+    background: #F0F4F8;
+  }
+  .legend-item.active .legend-dot { transform: scale(1.2); }
+  .legend-item[data-role="hrbp"].active { border-color: var(--hrbp); color: var(--hrbp); background: var(--hrbp-bg); }
+  .legend-item[data-role="mobility"].active { border-color: var(--mobility); color: var(--mobility); background: var(--mobility-bg); }
+  .legend-item[data-role="vendor"].active { border-color: var(--vendor); color: var(--vendor); background: var(--vendor-bg); }
+  .legend-item[data-role="assignee"].active { border-color: var(--assignee); color: var(--assignee); background: var(--assignee-bg); }
+  .legend-item[data-role="system"].active { border-color: var(--system); color: var(--system); background: var(--system-bg); }
+
+  /* Dimmed state when a role filter is active */
+  .step-card.dimmed {
+    opacity: 0.15;
+    transform: scale(0.97);
+    filter: grayscale(0.6);
+  }
+  .step-card.highlighted {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    transform: translateY(-3px);
+  }
+  .swimlane-card.dimmed {
+    opacity: 0.15;
+    filter: grayscale(0.6);
+  }
+  .swimlane-card.highlighted {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+  .step-card, .swimlane-card {
+    transition: all 0.3s ease;
+  }
+
   .legend-dot {
     width: 12px;
     height: 12px;
     border-radius: 3px;
+    transition: transform 0.2s ease;
   }
   .legend-dot.hrbp { background: var(--hrbp); }
   .legend-dot.mobility { background: var(--mobility); }
@@ -571,11 +618,11 @@
 <!-- ═══════════════ LEGEND ═══════════════ -->
 <div class="legend-bar">
   <span class="label">Owners</span>
-  <div class="legend-item"><div class="legend-dot hrbp"></div>HRBP</div>
-  <div class="legend-item"><div class="legend-dot mobility"></div>Mobility Team</div>
-  <div class="legend-item"><div class="legend-dot vendor"></div>Immigration / Relocation Vendor</div>
-  <div class="legend-item"><div class="legend-dot assignee"></div>Assignee</div>
-  <div class="legend-item"><div class="legend-dot system"></div>System / Auto</div>
+  <div class="legend-item" data-role="hrbp" onclick="toggleRoleFilter('hrbp')"><div class="legend-dot hrbp"></div>HRBP</div>
+  <div class="legend-item" data-role="mobility" onclick="toggleRoleFilter('mobility')"><div class="legend-dot mobility"></div>Mobility Team</div>
+  <div class="legend-item" data-role="vendor" onclick="toggleRoleFilter('vendor')"><div class="legend-dot vendor"></div>Immigration / Relocation Vendor</div>
+  <div class="legend-item" data-role="assignee" onclick="toggleRoleFilter('assignee')"><div class="legend-dot assignee"></div>Assignee</div>
+  <div class="legend-item" data-role="system" onclick="toggleRoleFilter('system')"><div class="legend-dot system"></div>System / Auto</div>
   <div class="alert-legend">
     <div class="alert-icon">&#9200; = Timed reminder</div>
     <div class="alert-icon">&#9888;&#65039; = Escalation trigger</div>
@@ -1056,6 +1103,51 @@ function checkPassword() {
 if (sessionStorage.getItem('trendyol-lta-auth') === 'true') {
   document.getElementById('password-gate').classList.add('hidden');
   document.getElementById('main-content').classList.add('visible');
+}
+
+// ── Role filter ──
+var activeRole = null;
+function toggleRoleFilter(role) {
+  var legendItems = document.querySelectorAll('.legend-item[data-role]');
+  var stepCards = document.querySelectorAll('.step-card');
+  var swimCards = document.querySelectorAll('.swimlane-card');
+  var roles = ['hrbp', 'mobility', 'vendor', 'assignee', 'system'];
+
+  if (activeRole === role) {
+    // Deactivate — reset everything
+    activeRole = null;
+    legendItems.forEach(function(el) { el.classList.remove('active'); });
+    stepCards.forEach(function(c) { c.classList.remove('dimmed', 'highlighted'); });
+    swimCards.forEach(function(c) { c.classList.remove('dimmed', 'highlighted'); });
+    return;
+  }
+
+  activeRole = role;
+
+  // Update legend pills
+  legendItems.forEach(function(el) {
+    el.classList.toggle('active', el.getAttribute('data-role') === role);
+  });
+
+  // Highlight / dim step cards
+  stepCards.forEach(function(card) {
+    var matches = card.classList.contains(role);
+    card.classList.toggle('dimmed', !matches);
+    card.classList.toggle('highlighted', matches);
+  });
+
+  // Highlight / dim swimlane cards
+  swimCards.forEach(function(card) {
+    var matches = card.classList.contains(role);
+    card.classList.toggle('dimmed', !matches);
+    card.classList.toggle('highlighted', matches);
+  });
+
+  // Scroll first highlighted card into view
+  var first = document.querySelector('.step-card.highlighted');
+  if (first) {
+    first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 }
 </script>
 
