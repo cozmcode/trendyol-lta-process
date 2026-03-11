@@ -877,10 +877,13 @@ function checkGatePassword() {
     });
     return false;
 }
-if (sessionStorage.getItem('trendyol-lta-auth') === 'true') {
-    document.getElementById('password-gate').classList.add('hidden');
-    document.getElementById('app-content').classList.add('visible');
-}
+document.addEventListener('DOMContentLoaded', function() {
+    if (sessionStorage.getItem('trendyol-lta-auth') === 'true') {
+        document.getElementById('password-gate').classList.add('hidden');
+        document.getElementById('app-content').classList.add('visible');
+        if (typeof initDashboard === 'function') initDashboard();
+    }
+});
 </script>
 
 <div id="app-content">
@@ -1365,10 +1368,6 @@ if (sessionStorage.getItem('trendyol-lta-auth') === 'true') {
         renderDonut();
     }
 
-    // Init if already authenticated
-    if (sessionStorage.getItem('trendyol-lta-auth') === 'true') {
-        initDashboard();
-    }
 </script>
 </div><!-- end #app-content -->
 </body>
