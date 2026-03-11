@@ -1123,18 +1123,18 @@ document.addEventListener('DOMContentLoaded', function() {
             tr.dataset.stat = a.status;
             tr.dataset.resp = a.resp;
 
-            tr.innerHTML = \`
-                <td>Employee \${a.id}</td>
-                <td class="td-id">\${a.empId}</td>
-                <td>\${a.div}</td>
-                <td><span class="tag-host \${a.host.toLowerCase()}">\${a.host}</span></td>
-                <td>\${a.immVendor}</td>
-                <td><span class="badge \${a.status.toLowerCase()}">\${a.status}</span></td>
-                <td>\${formatDate(a.start)}</td>
-                <td>\${a.end ? formatDate(a.end) : 'TBD'}</td>
-                <td><span class="days-mono \${severity}">\${days !== null ? days + 'd' : '—'}</span></td>
-                <td class="action-text" title="\${a.action}">\${a.action}</td>
-            \`;
+            tr.innerHTML = `
+                <td>Employee ${a.id}</td>
+                <td class="td-id">${a.empId}</td>
+                <td>${a.div}</td>
+                <td><span class="tag-host ${a.host.toLowerCase()}">${a.host}</span></td>
+                <td>${a.immVendor}</td>
+                <td><span class="badge ${a.status.toLowerCase()}">${a.status}</span></td>
+                <td>${formatDate(a.start)}</td>
+                <td>${a.end ? formatDate(a.end) : 'TBD'}</td>
+                <td><span class="days-mono ${severity}">${days !== null ? days + 'd' : '—'}</span></td>
+                <td class="action-text" title="${a.action}">${a.action}</td>
+            `;
             tbody.appendChild(tr);
         });
     }
@@ -1154,22 +1154,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const endDt = a.end || new Date(a.start.getTime() + 365 * 864e5);
             const rightPct = getPercent(endDt);
             
-            row.innerHTML = \`
-                <div class="gantt-label">\${a.id} · \${a.host}</div>
+            row.innerHTML = `
+                <div class="gantt-label">${a.id} · ${a.host}</div>
                 <div class="gantt-track">
-                    <div class="gantt-bar status-\${a.status.toLowerCase()}" style="left: \${leftPct}%; width: \${Math.max(2, rightPct - leftPct)}%">
-                        <span class="gantt-date">\${a.end ? formatDate(a.end) : 'TBD'}</span>
+                    <div class="gantt-bar status-${a.status.toLowerCase()}" style="left: ${leftPct}%; width: ${Math.max(2, rightPct - leftPct)}%">
+                        <span class="gantt-date">${a.end ? formatDate(a.end) : 'TBD'}</span>
                     </div>
-                    <div class="gantt-today" style="left: \${tp}%"></div>
+                    <div class="gantt-today" style="left: ${tp}%"></div>
                 </div>
-            \`;
+            `;
             g.appendChild(row);
         });
 
         const ax = document.getElementById('gantt-axis');
         ax.innerHTML = '';
         ['Oct 24', 'Apr 25', 'Oct 25', 'Apr 26', 'Oct 26', 'Apr 27'].forEach(x => {
-            ax.innerHTML += \`<span>\${x}</span>\`;
+            ax.innerHTML += `<span>${x}</span>`;
         });
     }
 
@@ -1192,23 +1192,23 @@ document.addEventListener('DOMContentLoaded', function() {
             item.className = 'expiry-item';
             item.dataset.id = a.id;
             
-            item.innerHTML = \`
+            item.innerHTML = `
                 <div class="expiry-ring">
                     <svg viewBox="0 0 40 40">
                         <circle class="ring-bg" cx="20" cy="20" r="16"/>
-                        <circle class="ring-fg" cx="20" cy="20" r="16" stroke="\${color}" stroke-dasharray="\${circ}" stroke-dashoffset="\${offset}"/>
+                        <circle class="ring-fg" cx="20" cy="20" r="16" stroke="${color}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
                     </svg>
-                    <div class="ring-label" style="color: \${color}">\${a.id}</div>
+                    <div class="ring-label" style="color: ${color}">${a.id}</div>
                 </div>
                 <div class="expiry-info">
-                    <div class="expiry-name">Employee \${a.id}</div>
-                    <div class="expiry-meta">\${a.host} · \${a.div}</div>
+                    <div class="expiry-name">Employee ${a.id}</div>
+                    <div class="expiry-meta">${a.host} · ${a.div}</div>
                 </div>
-                <div class="expiry-days \${sev}">
-                    <div class="days-val">\${days}</div>
+                <div class="expiry-days ${sev}">
+                    <div class="days-val">${days}</div>
                     <div class="days-lbl">days left</div>
                 </div>
-            \`;
+            `;
             list.appendChild(item);
         });
     }
@@ -1216,17 +1216,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Render Heatmap
     function renderHeatmap() {
         const grid = document.getElementById('matrix-grid');
-        grid.style.gridTemplateColumns = \`80px repeat(\${MILES_SHORT.length}, 1fr)\`;
+        grid.style.gridTemplateColumns = `80px repeat(${MILES_SHORT.length}, 1fr)`;
         grid.innerHTML = '<div class="matrix-row-label"></div>';
         
         MILES_SHORT.forEach(m => {
-            grid.innerHTML += \`<div class="matrix-header">\${m}</div>\`;
+            grid.innerHTML += `<div class="matrix-header">${m}</div>`;
         });
 
         ASSIGNEES.forEach(a => {
             const rowLabel = document.createElement('div');
             rowLabel.className = 'matrix-row-label';
-            rowLabel.textContent = \`Assignee \${a.id}\`;
+            rowLabel.textContent = `Assignee ${a.id}`;
             rowLabel.dataset.id = a.id;
             grid.appendChild(rowLabel);
 
@@ -1243,7 +1243,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 else if (v === 'n') { cell.classList.add('cell-no'); status = 'Not Done'; cell.textContent = '✗'; }
                 else { cell.classList.add('cell-tbu'); }
 
-                cell.setAttribute('data-tooltip', \`\${a.id}: \${MILES_FULL[i]} — \${status}\`);
+                cell.setAttribute('data-tooltip', `${a.id}: ${MILES_FULL[i]} — ${status}`);
                 grid.appendChild(cell);
             });
         });
@@ -1295,19 +1295,19 @@ document.addEventListener('DOMContentLoaded', function() {
             circle.setAttribute('cy', '80');
             circle.setAttribute('r', r);
             circle.setAttribute('stroke', item.color);
-            circle.setAttribute('stroke-dasharray', \`\${dash} \${circ - dash}\`);
-            circle.setAttribute('stroke-dashoffset', \`\${-offset}\`);
+            circle.setAttribute('stroke-dasharray', `${dash} ${circ - dash}`);
+            circle.setAttribute('stroke-dashoffset', `${-offset}`);
             svg.appendChild(circle);
             offset += dash;
 
-            legend.innerHTML += \`
+            legend.innerHTML += `
                 <div>
                     <span class="donut-legend-label">
-                        <i style="background: \${item.color}"></i> \${item.name}
+                        <i style="background: ${item.color}"></i> ${item.name}
                     </span>
-                    <span>\${item.count}</span>
+                    <span>${item.count}</span>
                 </div>
-            \`;
+            `;
         });
     }
 
