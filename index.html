@@ -167,6 +167,42 @@
     color: var(--teal);
   }
 
+  /* ── Language Toggle ── */
+  .lang-toggle {
+    position: absolute;
+    top: 36px;
+    right: 60px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .lang-toggle button {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .lang-toggle button:hover { color: rgba(255,255,255,0.8); }
+  .lang-toggle button.active {
+    background: rgba(64,174,188,0.25);
+    color: #fff;
+  }
+
   /* ── Legend ── */
   .legend-bar {
     display: flex;
@@ -610,22 +646,26 @@
 <div id="main-content">
 <!-- ═══════════════ HEADER ═══════════════ -->
 <div class="header">
-  <h1>Trendyol Gulf LTA — <span>Assignment Process Flow</span></h1>
-  <p>Long-Term Assignment lifecycle: Turkey &rarr; UAE / KSA &nbsp;|&nbsp; Prepared by The Cozm</p>
-  <div class="badge">41 tracked fields &middot; 5 stakeholder groups &middot; 24 automated alerts</div>
+  <div class="lang-toggle" id="lang-toggle">
+    <button class="active" id="btn-en" onclick="setLang('en')">EN</button>
+    <button id="btn-tr" onclick="setLang('tr')">TR</button>
+  </div>
+  <h1 data-i18n="header.title">Trendyol Gulf LTA — <span>Assignment Process Flow</span></h1>
+  <p data-i18n="header.subtitle">Long-Term Assignment lifecycle: Turkey &rarr; UAE / KSA &nbsp;|&nbsp; Prepared by The Cozm</p>
+  <div class="badge" data-i18n="header.badge">41 tracked fields &middot; 5 stakeholder groups &middot; 24 automated alerts</div>
 </div>
 
 <!-- ═══════════════ LEGEND ═══════════════ -->
 <div class="legend-bar">
-  <span class="label">Owners</span>
-  <div class="legend-item" data-role="hrbp" onclick="toggleRoleFilter('hrbp')"><div class="legend-dot hrbp"></div>HRBP</div>
-  <div class="legend-item" data-role="mobility" onclick="toggleRoleFilter('mobility')"><div class="legend-dot mobility"></div>Mobility Team</div>
-  <div class="legend-item" data-role="vendor" onclick="toggleRoleFilter('vendor')"><div class="legend-dot vendor"></div>Immigration / Relocation Vendor</div>
-  <div class="legend-item" data-role="assignee" onclick="toggleRoleFilter('assignee')"><div class="legend-dot assignee"></div>Assignee</div>
-  <div class="legend-item" data-role="system" onclick="toggleRoleFilter('system')"><div class="legend-dot system"></div>System / Auto</div>
+  <span class="label" data-i18n="legend.owners">Owners</span>
+  <div class="legend-item" data-role="hrbp" onclick="toggleRoleFilter('hrbp')"><div class="legend-dot hrbp"></div><span data-i18n="role.hrbp">HRBP</span></div>
+  <div class="legend-item" data-role="mobility" onclick="toggleRoleFilter('mobility')"><div class="legend-dot mobility"></div><span data-i18n="role.mobility">Mobility Team</span></div>
+  <div class="legend-item" data-role="vendor" onclick="toggleRoleFilter('vendor')"><div class="legend-dot vendor"></div><span data-i18n="role.vendor">Immigration / Relocation Vendor</span></div>
+  <div class="legend-item" data-role="assignee" onclick="toggleRoleFilter('assignee')"><div class="legend-dot assignee"></div><span data-i18n="role.assignee">Assignee</span></div>
+  <div class="legend-item" data-role="system" onclick="toggleRoleFilter('system')"><div class="legend-dot system"></div><span data-i18n="role.system">System / Auto</span></div>
   <div class="alert-legend">
-    <div class="alert-icon">&#9200; = Timed reminder</div>
-    <div class="alert-icon">&#9888;&#65039; = Escalation trigger</div>
+    <div class="alert-icon"><span data-i18n="legend.timed">&#9200; = Timed reminder</span></div>
+    <div class="alert-icon"><span data-i18n="legend.escalation">&#9888;&#65039; = Escalation trigger</span></div>
   </div>
 </div>
 
@@ -637,22 +677,22 @@
     <div class="phase-header">
       <div class="phase-number">1</div>
       <div>
-        <div class="phase-title">Assignment Initiation</div>
-        <span class="phase-subtitle">HRBP confirms assignment, Mobility Team sets up tracker</span>
+        <div class="phase-title" data-i18n="p1.title">Assignment Initiation</div>
+        <span class="phase-subtitle" data-i18n="p1.sub">HRBP confirms assignment, Mobility Team sets up tracker</span>
       </div>
     </div>
     <div class="steps-flow">
       <div class="step-wrapper">
         <div class="step-card hrbp">
-          <div class="step-owner hrbp">&#9679; HRBP</div>
-          <div class="step-name">Assignment Confirmed</div>
-          <div class="step-detail">HRBP confirms employee, home/host country, division, job title, and assignment duration</div>
+          <div class="step-owner hrbp">&#9679; <span data-i18n="role.hrbp">HRBP</span></div>
+          <div class="step-name" data-i18n="p1.s1.name">Assignment Confirmed</div>
+          <div class="step-detail" data-i18n="p1.s1.detail">HRBP confirms employee, home/host country, division, job title, and assignment duration</div>
           <div class="step-fields">
-            <div class="step-field">Employee Name, ID</div>
-            <div class="step-field">Home / Host Country</div>
-            <div class="step-field">Division, Job Title</div>
-            <div class="step-field">Assignment Duration</div>
-            <div class="step-field">Start / End Date (Planned)</div>
+            <div class="step-field" data-i18n="p1.s1.f1">Employee Name, ID</div>
+            <div class="step-field" data-i18n="p1.s1.f2">Home / Host Country</div>
+            <div class="step-field" data-i18n="p1.s1.f3">Division, Job Title</div>
+            <div class="step-field" data-i18n="p1.s1.f4">Assignment Duration</div>
+            <div class="step-field" data-i18n="p1.s1.f5">Start / End Date (Planned)</div>
           </div>
         </div>
       </div>
@@ -1148,6 +1188,305 @@ function toggleRoleFilter(role) {
   if (first) {
     first.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
+}
+
+// ── Language Toggle ──
+var currentLang = 'en';
+var enSnapshot = null; // stores original English innerHTML
+
+var tr = {
+  // Header
+  'header.title': 'Trendyol Gulf UVG — <span>Görevlendirme Süreç Akışı</span>',
+  'header.subtitle': 'Uzun Vadeli Görevlendirme yaşam döngüsü: Türkiye &rarr; BAE / KSA &nbsp;|&nbsp; The Cozm tarafından hazırlanmıştır',
+  'header.badge': '41 takip edilen alan &middot; 5 paydaş grubu &middot; 24 otomatik uyarı',
+  // Legend
+  'legend.owners': 'Sorumlular',
+  'legend.timed': '&#9200; = Zamanlı hatırlatma',
+  'legend.escalation': '&#9888;&#65039; = Eskalasyon tetikleyici',
+  // Roles
+  'role.hrbp': 'İKİO',
+  'role.mobility': 'Mobilite Ekibi',
+  'role.vendor': 'Göçmenlik / Relokasyon Tedarikçisi',
+  'role.assignee': 'Görevli',
+  'role.system': 'Sistem / Oto',
+  // Phase 1
+  'p1.title': 'Görevlendirme Başlatma',
+  'p1.sub': 'İKİO görevlendirmeyi onaylar, Mobilite Ekibi takipçiyi kurar',
+  'p1.s1.name': 'Görevlendirme Onaylandı',
+  'p1.s1.detail': 'İKİO çalışanı, kaynak/ev sahibi ülkeyi, bölümü, iş unvanını ve görev süresini onaylar',
+  'p1.s1.f1': 'Çalışan Adı, ID',
+  'p1.s1.f2': 'Kaynak / Ev Sahibi Ülke',
+  'p1.s1.f3': 'Bölüm, İş Unvanı',
+  'p1.s1.f4': 'Görev Süresi',
+  'p1.s1.f5': 'Başlangıç / Bitiş Tarihi (Planlanan)',
+  'p1.s2.name': 'Teklif Verildi',
+  'p1.s2.detail': 'Mobilite Ekibi görevlendirme teklifini hazırlar ve çalışana gönderir',
+  'p1.s2.f1': 'Teklif Veriliş Tarihi',
+  'p1.s2.f2': 'Teklif İmza Tarihi',
+  'p1.s3.name': 'Tedarikçi ve Ekip Ataması',
+  'p1.s3.detail': 'Relokasyon tedarikçisi, göçmenlik tedarikçisi ve mobilite sorumlusu atanır',
+  'p1.s3.f1': 'Relokasyon Tedarikçisi',
+  'p1.s3.f2': 'Göçmenlik Tedarikçisi',
+  'p1.s3.f3': 'Mobilite Sorumlusu',
+  'p1.s4.name': 'Mobilite Tanışma Görüşmesi',
+  'p1.s4.detail': 'Görevli ile relokasyon sürecini ve sonraki adımları açıklamak için tanışma görüşmesi',
+  'p1.s4.f1': 'Mobilite Tanışma Görüşmesi Tamamlandı',
+  'p1.s5.name': 'Tedarikçi Tanıtımı',
+  'p1.s5.detail': 'Görevliyi göçmenlik ve relokasyon tedarikçileriyle buluşturur',
+  'p1.s5.f1': 'Tedarikçi Tanıtıldı',
+  // Phase 2
+  'p2.title': 'Belge Toplama ve Tasdik',
+  'p2.sub': 'Mobilite Ekibi belgeleri toplar, tedarikçi tasdiki yürütür',
+  'p2.s1.name': 'Belge Toplama',
+  'p2.s1.detail': 'Görevliden pasaport, eğitim sertifikaları, fotoğraflar, aile cüzdanı ve diğer gerekli belgeler toplanır',
+  'p2.s1.f1': 'Belgeler Toplandı (E/H)',
+  'p2.s2.name': 'Belge Tasdiki',
+  'p2.s2.detail': 'Tedarikçi belgeleri Türk makamları ve BAE büyükelçiliği ile tasdik eder. KSA için: Mobilite Ekibi dış kaynak tedarikçisi aracılığıyla yürütür.',
+  'p2.s2.f1': 'Belge Tasdik Durumu',
+  'p2.s2.f2': 'Tasdik Başlangıç Tarihi',
+  'p2.s2.f3': 'Tasdik Tamamlanma Tarihi',
+  // Phase 3
+  'p3.title': 'Giriş İzni ve Seyahat',
+  'p3.sub': 'Tedarikçi giriş izni başvurusu yapar, görevli seyahat rezervasyonu yapar',
+  'p3.s1.name': 'Giriş İzni Başvurusu',
+  'p3.s1.detail': 'Tedarikçi ev sahibi ülke makamlarına giriş izni / ziyaret vizesi başvurusu yapar',
+  'p3.s1.f1': 'Giriş İzni Durumu',
+  'p3.s1.f2': 'Giriş İzni Başvuru Tarihi',
+  'p3.s1.f3': 'Giriş İzni Verilme Tarihi',
+  'p3.s2.name': 'Uçuş Rezervasyonu',
+  'p3.s2.detail': 'Görevli, giriş izni verildikten sonra uçuş rezervasyonu yapar',
+  'p3.s2.f1': 'Uçuş Rezerve Edildi (E/H + Tarih)',
+  'p3.s3.name': 'Ev Sahibi Ülkeye Varış',
+  'p3.s3.detail': 'Görevli BAE / KSA\'ya varır — ülke içi işlemleri tetikler',
+  'p3.s3.f1': 'BAE/KSA Varış Tarihi',
+  // Phase 4
+  'p4.title': 'Ülke İçi İşlemler',
+  'p4.sub': 'Sağlık muayenesi, biyometrik, iş sözleşmesi, oturum vizesi — tedarikçi yönetiminde',
+  'p4.s1.name': 'Sağlık Muayenesi',
+  'p4.s1.detail': 'Tedarikçi görevli için zorunlu sağlık muayenesini düzenler',
+  'p4.s1.f1': 'Sağlık Muayenesi Tamamlanma Tarihi',
+  'p4.s2.name': 'Biyometrik',
+  'p4.s2.detail': 'Tedarikçi biyometrik randevusu ve başvurusunu düzenler',
+  'p4.s2.f1': 'Biyometrik Tamamlanma Tarihi',
+  'p4.s3.name': 'İş Sözleşmesi İmzalandı',
+  'p4.s3.detail': 'İş sözleşmesi ev sahibi ülkede görevli ve işveren tarafından hazırlanır ve imzalanır',
+  'p4.s3.f1': 'İş Sözleşmesi İmzalandı (E/H)',
+  'p4.s4.name': 'Oturum Vizesi / İkamet',
+  'p4.s4.detail': 'Tedarikçi oturum vizesi (BAE) veya İkamet (KSA) başvurusu yapar',
+  'p4.s4.f1': 'Oturum Vizesi Durumu',
+  'p4.s4.f2': 'Oturum Vizesi Verilme Tarihi',
+  // Phase 5
+  'p5.title': 'Kimlik Kartı ve Yerleşim',
+  'p5.sub': 'Son kurulum: kimlik, bankacılık, konaklama, bordro, sigorta',
+  'p5.s1.name': 'Emirates Kimlik / Ulusal Kimlik',
+  'p5.s1.detail': 'Tedarikçi Emirates Kimlik (BAE) veya Ulusal Kimlik (KSA) başvurusunu ve teslimini takip eder',
+  'p5.s1.f1': 'Emirates Kimlik Durumu',
+  'p5.s1.f2': 'Emirates Kimlik Teslim Tarihi',
+  'p5.s1.f3': 'Seyahat Kısıtlaması Aktif (E/H)',
+  'p5.s2.name': 'Banka Hesabı Açma',
+  'p5.s2.detail': 'Görevli yerel banka hesabı açar (Emirates Kimlik gerektirir)',
+  'p5.s2.f1': 'Banka Hesabı Açıldı (E/H)',
+  'p5.s3.name': 'Konaklama',
+  'p5.s3.detail': 'Tedarikçi varış öncesi geçici konaklama düzenler, ardından kalıcı konut desteği sağlar',
+  'p5.s3.f1': 'Geçici Konaklama Düzenlendi',
+  'p5.s3.f2': 'Kalıcı Konut Sağlandı',
+  'p5.s4.name': 'Bordro ve Sigorta',
+  'p5.s4.detail': 'Mobilite Ekibi ev sahibi ülke bordrosunu kurar ve sağlık sigortasını etkinleştirir',
+  'p5.s4.f1': 'Bordro Kurulumu (BAE/KSA)',
+  'p5.s4.f2': 'Sağlık Sigortası Etkinleştirildi',
+  'p5.s5.name': 'Görevlendirme Tamamlandı',
+  'p5.s5.detail': 'Tüm kilometre taşları onaylandı — durum otomatik olarak "Tamamlandı" olarak güncellenir',
+  'p5.s5.f1': 'Genel Görevlendirme Durumu',
+  // Phase 6
+  'p6.title': 'Sürekli İzleme ve Yenileme',
+  'p6.sub': 'Otomatik uyarılarla son kullanma tarihlerinin sürekli takibi',
+  'p6.s1.name': 'Vize Süresi İzleme',
+  'p6.s1.detail': 'Oturum vizesi süresinin dolmasından 90, 60, 30 ve 14 gün önce Mobilite Ekibi + Göçmenlik Tedarikçisine otomatik uyarılar',
+  'p6.s2.name': 'İş Sözleşmesi Süresi',
+  'p6.s2.detail': 'İş sözleşmesi bitiş tarihinden 90, 60, 30 gün önce İKİO + Mobilite Ekibine otomatik uyarılar',
+  'p6.s3.name': 'Görev Sonu İzleme',
+  'p6.s3.detail': 'Planlanan görev bitişinden 90, 60, 30 gün önce İKİO, Mobilite Ekibi ve Görevliye otomatik uyarılar. Uzatma veya geri dönüş planlamasını tetikler.',
+  'p6.s4.name': 'Seyahat Kısıtlaması Kaldırma',
+  'p6.s4.detail': 'Seyahat kısıtlama süresi sona erdiğinde Mobilite Ekibi + Görevliye bildirim (genellikle vize verilmesinden 6 ay sonra)',
+  // Swimlane
+  'swim.title': 'Paydaşa Göre Sorumluluk Özeti',
+  'swim.hrbp.items': ['Çalışan profili ve görevlendirme koşullarını onayla', 'Görev süresi ve tarihleri belirle', 'Uzatma veya geri dönüşü onayla', 'Sözleşme süresi uyarılarına yanıt ver'],
+  'swim.mobility.items': ['Teklif ver ve imza takibi yap', 'Tedarikçi ve mobilite sorumlusu ata', 'Tanışma görüşmesi yap ve tedarikçileri tanıt', 'Görevliden belgeleri topla', 'Bordro ve sağlık sigortası kur', 'Tüm paydaşlarla koordinasyon sağla'],
+  'swim.vendor.items': ['Belge tasdiki (BAE: tedarikçi; KSA: dış kaynak)', 'Giriş izni başvurusu ve takibi', 'Sağlık muayenesi, biyometrik, iş sözleşmesi', 'Oturum vizesi / İkamet başvurusu', 'Emirates Kimlik / Ulusal Kimlik takibi', 'Geçici ve kalıcı konaklama', 'Vize yenileme ve uzatmalar'],
+  'swim.assignee.items': ['Teklif mektubunu imzala', 'Gerekli belgeleri sağla', 'Giriş izninden sonra uçuş rezervasyonu yap', 'Varış tarihini onayla', 'Banka hesabı aç (Emirates Kimlik sonrası)', 'Kalıcı konut güvence altına al (tedarikçi ile)'],
+  // Automation
+  'auto.title': 'Otomasyon Fırsatları',
+  'auto.sub': 'The Cozm\'un manuel takibi ve kaçırılan son tarihleri ortadan kaldırmak için otomatikleştirebilecekleri',
+  'auto.1.h': '&#128276; Slack / E-posta Hatırlatmaları',
+  'auto.1.p': 'Vize süresi, belge son tarihleri, sözleşme yenilemeleri ve konaklama kurulumu için otomatik uyarılar — doğru kişiye doğru zamanda Slack veya e-posta ile gönderilir.',
+  'auto.2.h': '&#128260; Otomatik Durum İlerlemesi',
+  'auto.2.p': 'Bir kilometre taşı tamamlandığında (örn. giriş izni verildi), sonraki adım otomatik olarak tetiklenir ve sorumlu taraf bilgilendirilir — manuel devir yok.',
+  'auto.3.h': '&#128200; Gerçek Zamanlı Gösterge Paneli',
+  'auto.3.p': 'Düz Google Sheet\'i her görevlinin ilerlemesini, gecikmiş öğeleri ve yaklaşan son tarihleri bir bakışta gösteren görsel bir gösterge paneli ile değiştirin.',
+  'auto.4.h': '&#128231; Tedarikçi Eskalasyonu',
+  'auto.4.p': 'Tasdik, izin veya vizeler eşik süresini aştığında göçmenlik tedarikçilerine (Fragomen, EER, Tamimi) otomatik e-posta — önceden hazırlanmış eskalasyon şablonlarıyla.',
+  'auto.5.h': '&#128197; Takvim Entegrasyonu',
+  'auto.5.p': 'Önemli tarihler (görev sonu, vize süresi, sözleşme yenileme) önceden hatırlatmalarla doğrudan İKİO ve Mobilite Ekibi takvimlerine eklenir.',
+  'auto.6.h': '&#129302; Yapay Zeka Soru Yanıtlayıcı',
+  'auto.6.p': '"Çalışan X\'in vize durumu nedir?" veya "Y\'nin sözleşmesi ne zaman bitiyor?" gibi yaygın Slack/e-posta sorularına otomatik yanıt — takipçiden canlı veri çeker.',
+  // Footer
+  'footer': 'Hazırlayan <strong>The Cozm</strong> &nbsp;|&nbsp; 11 Mart 2026 &nbsp;|&nbsp; Gizli — Trendyol Global Mobilite'
+};
+
+function setLang(lang) {
+  if (lang === currentLang) return;
+  var mc = document.getElementById('main-content');
+
+  if (lang === 'tr') {
+    // Save English snapshot
+    enSnapshot = mc.innerHTML;
+    applyTurkish();
+  } else {
+    // Restore English
+    if (enSnapshot) mc.innerHTML = enSnapshot;
+  }
+
+  currentLang = lang;
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-tr').classList.toggle('active', lang === 'tr');
+  document.documentElement.lang = lang;
+}
+
+function applyTurkish() {
+  // Helper: get all elements matching selector inside #main-content
+  function q(sel) { return document.querySelectorAll('#main-content ' + sel); }
+  function qi(sel, i) { var els = q(sel); return els[i] || null; }
+
+  // Header
+  var h1 = document.querySelector('#main-content .header h1');
+  if (h1) h1.innerHTML = tr['header.title'];
+  var hsub = document.querySelector('#main-content .header > p');
+  if (hsub) hsub.innerHTML = tr['header.subtitle'];
+  var badge = document.querySelector('#main-content .badge');
+  if (badge) badge.innerHTML = tr['header.badge'];
+
+  // Legend
+  var lbl = document.querySelector('#main-content .legend-bar .label');
+  if (lbl) lbl.textContent = tr['legend.owners'];
+
+  // Role labels in legend
+  var legendSpans = document.querySelectorAll('#main-content .legend-item span');
+  var roleKeys = ['role.hrbp','role.mobility','role.vendor','role.assignee','role.system'];
+  legendSpans.forEach(function(sp, i) { if (tr[roleKeys[i]]) sp.textContent = tr[roleKeys[i]]; });
+
+  // Alert legend
+  var alertSpans = document.querySelectorAll('#main-content .alert-legend span');
+  if (alertSpans[0]) alertSpans[0].innerHTML = tr['legend.timed'];
+  if (alertSpans[1]) alertSpans[1].innerHTML = tr['legend.escalation'];
+
+  // Phases
+  var titles = q('.phase-title');
+  var subs = q('.phase-subtitle');
+  var phaseKeys = ['p1','p2','p3','p4','p5','p6'];
+  phaseKeys.forEach(function(pk, i) {
+    if (titles[i] && tr[pk+'.title']) titles[i].textContent = tr[pk+'.title'];
+    if (subs[i] && tr[pk+'.sub']) subs[i].textContent = tr[pk+'.sub'];
+  });
+
+  // Step cards — walk all step-cards in order
+  var cards = q('.step-card');
+  var stepMap = [
+    // Phase 1: 5 cards
+    {n:'p1.s1',ff:5},{n:'p1.s2',ff:2},{n:'p1.s3',ff:3},{n:'p1.s4',ff:1},{n:'p1.s5',ff:1},
+    // Phase 2: 2 cards
+    {n:'p2.s1',ff:1},{n:'p2.s2',ff:3},
+    // Phase 3: 3 cards
+    {n:'p3.s1',ff:3},{n:'p3.s2',ff:1},{n:'p3.s3',ff:1},
+    // Phase 4: 4 cards
+    {n:'p4.s1',ff:1},{n:'p4.s2',ff:1},{n:'p4.s3',ff:1},{n:'p4.s4',ff:2},
+    // Phase 5: 6 cards
+    {n:'p5.s1',ff:3},{n:'p5.s2',ff:1},{n:'p5.s3',ff:2},{n:'p5.s4',ff:2},{n:'p5.s5',ff:1},
+    // Phase 6: 4 cards
+    {n:'p6.s1',ff:0},{n:'p6.s2',ff:0},{n:'p6.s3',ff:0},{n:'p6.s4',ff:0}
+  ];
+
+  // Role owner translations
+  var ownerMap = {
+    'hrbp': tr['role.hrbp'],
+    'mobility': tr['role.mobility'],
+    'vendor': tr['role.vendor'],
+    'assignee': tr['role.assignee'],
+    'system': tr['role.system']
+  };
+
+  cards.forEach(function(card, idx) {
+    if (!stepMap[idx]) return;
+    var key = stepMap[idx].n;
+    var fieldCount = stepMap[idx].ff;
+
+    // Owner label
+    var owner = card.querySelector('.step-owner');
+    if (owner) {
+      var ownerSpan = owner.querySelector('span');
+      if (ownerSpan) {
+        // Already has a span from legend tagging
+        for (var r in ownerMap) { if (owner.classList.contains(r)) { ownerSpan.textContent = ownerMap[r]; break; } }
+      } else {
+        for (var r in ownerMap) {
+          if (owner.classList.contains(r)) {
+            owner.innerHTML = '&#9679; ' + ownerMap[r];
+            break;
+          }
+        }
+      }
+    }
+
+    // Step name
+    var name = card.querySelector('.step-name');
+    if (name && tr[key+'.name']) name.textContent = tr[key+'.name'];
+
+    // Step detail
+    var detail = card.querySelector('.step-detail');
+    if (detail && tr[key+'.detail']) detail.textContent = tr[key+'.detail'];
+
+    // Fields
+    var fields = card.querySelectorAll('.step-field');
+    for (var f = 0; f < fieldCount; f++) {
+      if (fields[f] && tr[key+'.f'+(f+1)]) fields[f].textContent = tr[key+'.f'+(f+1)];
+    }
+  });
+
+  // Swimlane summary
+  var swimTitle = document.querySelector('#main-content .swimlane-summary h2');
+  if (swimTitle) swimTitle.textContent = tr['swim.title'];
+
+  var swimCards = q('.swimlane-card');
+  var swimKeys = ['swim.hrbp','swim.mobility','swim.vendor','swim.assignee'];
+  var swimRoleNames = [tr['role.hrbp'], tr['role.mobility'], tr['role.vendor'], tr['role.assignee']];
+  swimCards.forEach(function(sc, i) {
+    if (!swimKeys[i]) return;
+    var h3 = sc.querySelector('h3');
+    if (h3) h3.textContent = swimRoleNames[i];
+    var items = tr[swimKeys[i]+'.items'];
+    if (items) {
+      var lis = sc.querySelectorAll('li');
+      lis.forEach(function(li, j) { if (items[j]) li.textContent = items[j]; });
+    }
+  });
+
+  // Automation
+  var autoTitle = document.querySelector('#main-content .automation-section h2');
+  if (autoTitle) autoTitle.textContent = tr['auto.title'];
+  var autoSub = document.querySelector('#main-content .automation-section .sub');
+  if (autoSub) autoSub.textContent = tr['auto.sub'];
+  var autoCards = q('.auto-card');
+  for (var a = 1; a <= 6; a++) {
+    if (autoCards[a-1]) {
+      var h4 = autoCards[a-1].querySelector('h4');
+      var p = autoCards[a-1].querySelector('p');
+      if (h4 && tr['auto.'+a+'.h']) h4.innerHTML = tr['auto.'+a+'.h'];
+      if (p && tr['auto.'+a+'.p']) p.textContent = tr['auto.'+a+'.p'];
+    }
+  }
+
+  // Footer
+  var footer = document.querySelector('.footer');
+  if (footer) footer.innerHTML = tr['footer'];
 }
 </script>
 
