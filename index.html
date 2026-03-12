@@ -1902,6 +1902,27 @@ var OPEN_QUESTIONS = {
   ]
 };
 
+// ── Pre-compute global question numbering (continuous across all phases) ──
+var QUESTION_NUMBERS = {};
+(function() {
+  var STEP_ORDER = [
+    'p1-s1','p1-s2','p1-s3','p1-s4','p1-s5',
+    'p2-s1','p2-s2',
+    'p3-s1',
+    'p4-s1','p4-s2','p4-s3','p4-s4',
+    'p5-s1','p5-s2','p5-s3','p5-s4','p5-s5',
+    'p6-s1','p6-s2','p6-s3','p6-s4',
+    'general'
+  ];
+  var n = 1;
+  STEP_ORDER.forEach(function(key) {
+    var qs = OPEN_QUESTIONS[key];
+    if (!qs) return;
+    QUESTION_NUMBERS[key] = [];
+    qs.forEach(function() { QUESTION_NUMBERS[key].push(n++); });
+  });
+})();
+
 // ── CommentStore — localStorage abstraction ──
 var CommentStore = (function() {
   var STORAGE_KEY = 'trendyol-lta-comments';
@@ -1980,9 +2001,11 @@ function renderComments(stepId) {
   var list = document.getElementById('comment-list');
   list.innerHTML = '';
 
-  // Seed questions first
+  // Seed questions first (with continuous global numbering)
   var seeds = OPEN_QUESTIONS[stepId] || [];
-  seeds.forEach(function(q) {
+  var nums = QUESTION_NUMBERS[stepId] || [];
+  seeds.forEach(function(q, i) {
+    var num = nums[i] || (i + 1);
     var div = document.createElement('div');
     div.className = 'comment-bubble seed';
     div.innerHTML =
@@ -1990,7 +2013,7 @@ function renderComments(stepId) {
       '<div class="comment-body">' +
         '<div class="comment-meta">' +
           '<span class="comment-author">The Cozm</span>' +
-          '<span class="seed-label">Open Question</span>' +
+          '<span class="seed-label">Q' + num + '</span>' +
         '</div>' +
         '<div class="comment-text">' + escapeHtml(q) + '</div>' +
       '</div>';

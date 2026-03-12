@@ -1706,8 +1706,9 @@ function renderDiscussionComments() {
     var list = document.getElementById('discussion-list');
     list.innerHTML = '';
 
-    // Seeds
-    DASHBOARD_SEEDS.forEach(function(q) {
+    // Seeds (with continuous numbering)
+    DASHBOARD_SEEDS.forEach(function(q, i) {
+        var num = i + 1;
         var div = document.createElement('div');
         div.className = 'disc-bubble seed';
         div.innerHTML =
@@ -1715,7 +1716,7 @@ function renderDiscussionComments() {
             '<div class="disc-body">' +
                 '<div class="disc-meta">' +
                     '<span class="disc-author">The Cozm</span>' +
-                    '<span class="disc-seed-label">Open Question</span>' +
+                    '<span class="disc-seed-label">Q' + num + '</span>' +
                 '</div>' +
                 '<div class="disc-text">' + escapeHtmlDash(q) + '</div>' +
             '</div>';
