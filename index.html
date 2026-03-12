@@ -365,7 +365,7 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
     transition: all 0.2s ease;
     position: relative;
-    cursor: default;
+    cursor: pointer;
   }
   .step-card:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -651,6 +651,266 @@
   .page-nav a svg { width: 16px; height: 16px; flex-shrink: 0; }
   .page-nav a:hover { color: #fff; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.08); }
   .page-nav a.active { color: #fff; background: rgba(64,174,188,0.18); border-color: rgba(64,174,188,0.3); }
+
+  /* ── Comment Badge on Step Cards ── */
+  .comment-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(64,174,188,0.4);
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  /* ── Comment Slide-Out Panel ── */
+  .comment-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(27,28,49,0.5);
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .comment-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .comment-panel {
+    position: fixed;
+    top: 0;
+    right: -440px;
+    width: 420px;
+    height: 100vh;
+    background: #fff;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', -apple-system, sans-serif;
+  }
+  .comment-panel.open {
+    right: 0;
+  }
+
+  .comment-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #E8ECF0;
+    background: #FAFBFC;
+  }
+  .comment-panel-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--indigo);
+    margin: 0;
+  }
+  .comment-panel-header .close-btn {
+    background: none;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    transition: all 0.2s;
+  }
+  .comment-panel-header .close-btn:hover {
+    background: #F5F5F5;
+    color: #333;
+  }
+
+  .comment-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 24px;
+  }
+  .comment-list::-webkit-scrollbar { width: 4px; }
+  .comment-list::-webkit-scrollbar-thumb { background: #DDD; border-radius: 4px; }
+
+  .comment-bubble {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #F0F0F0;
+  }
+  .comment-bubble:last-child { border-bottom: none; }
+  .comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--indigo);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .comment-bubble.seed .comment-avatar {
+    background: var(--gold);
+  }
+  .comment-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .comment-author {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--indigo);
+  }
+  .comment-time {
+    font-size: 10px;
+    color: #AAA;
+  }
+  .comment-text {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.5;
+  }
+
+  /* Seed question styling */
+  .comment-bubble.seed {
+    background: #FFFBF0;
+    border: 1px solid #F5E6C8;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .comment-bubble.seed .comment-author { color: var(--gold); }
+  .seed-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gold);
+    background: rgba(189,137,65,0.12);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* File chips */
+  .comment-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .file-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: #F0F4F8;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+  }
+  .file-chip:hover { background: #E4EBF2; }
+
+  /* Comment input area */
+  .comment-input-area {
+    border-top: 1px solid #E8ECF0;
+    padding: 16px 24px;
+    background: #FAFBFC;
+  }
+  .file-drop-zone {
+    border: 2px dashed #DDD;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+    color: #AAA;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+  }
+  .file-drop-zone:hover, .file-drop-zone.dragover {
+    border-color: var(--teal);
+    color: var(--teal);
+    background: rgba(64,174,188,0.04);
+  }
+  .file-preview-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .file-preview-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: #EDF5FF;
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--teal);
+    font-weight: 500;
+  }
+  .file-preview-item .remove-file {
+    cursor: pointer;
+    font-size: 14px;
+    color: #999;
+    margin-left: 2px;
+  }
+  .file-preview-item .remove-file:hover { color: var(--red); }
+
+  .comment-input-area textarea {
+    width: 100%;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: none;
+    height: 60px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .comment-input-area textarea:focus { border-color: var(--teal); }
+  .comment-input-area .send-btn {
+    margin-top: 8px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: var(--teal);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .comment-input-area .send-btn:hover { background: #36969f; }
 </style>
 </head>
 <body>
@@ -721,7 +981,7 @@
     </div>
     <div class="steps-flow">
       <div class="step-wrapper">
-        <div class="step-card hrbp">
+        <div class="step-card hrbp" data-step-id="p1-s1">
           <div class="step-owner hrbp">&#9679; <span data-i18n="role.hrbp">HRBP</span></div>
           <div class="step-name" data-i18n="p1.s1.name">Assignment Confirmed</div>
           <div class="step-detail" data-i18n="p1.s1.detail">HRBP confirms employee, home/host country, division, job title, and assignment duration</div>
@@ -736,7 +996,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card mobility">
+        <div class="step-card mobility" data-step-id="p1-s2">
           <div class="step-owner mobility">&#9679; Mobility Team</div>
           <div class="step-name">Offer Issued</div>
           <div class="step-detail">Mobility Team prepares and sends assignment offer to employee</div>
@@ -749,7 +1009,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card mobility">
+        <div class="step-card mobility" data-step-id="p1-s3">
           <div class="step-owner mobility">&#9679; Mobility Team</div>
           <div class="step-name">Vendor & Team Assignment</div>
           <div class="step-detail">Assign relocation vendor, immigration vendor, and mobility responsible person</div>
@@ -762,7 +1022,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card mobility">
+        <div class="step-card mobility" data-step-id="p1-s4">
           <div class="step-owner mobility">&#9679; Mobility Team</div>
           <div class="step-name">Mobility Intro Call</div>
           <div class="step-detail">Introductory call with assignee to explain the relocation process and next steps</div>
@@ -774,7 +1034,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card mobility">
+        <div class="step-card mobility" data-step-id="p1-s5">
           <div class="step-owner mobility">&#9679; Mobility Team</div>
           <div class="step-name">Vendor Introduction</div>
           <div class="step-detail">Connect assignee with immigration and relocation vendors</div>
@@ -800,7 +1060,7 @@
     </div>
     <div class="steps-flow">
       <div class="step-wrapper">
-        <div class="step-card mobility">
+        <div class="step-card mobility" data-step-id="p2-s1">
           <div class="step-owner mobility">&#9679; Mobility Team</div>
           <div class="step-name">Document Collection</div>
           <div class="step-detail">Collect passport, education certificates, photos, family book (aile cuzdani), and other required documents from assignee</div>
@@ -812,7 +1072,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card vendor">
+        <div class="step-card vendor" data-step-id="p2-s2">
           <div class="step-owner vendor">&#9679; Immigration Vendor</div>
           <div class="step-name">Document Attestation</div>
           <div class="step-detail">Vendor attests documents with Turkish authorities and UAE embassy. For KSA: handled by Mobility Team via outsource vendor.</div>
@@ -840,7 +1100,7 @@
     </div>
     <div class="steps-flow">
       <div class="step-wrapper">
-        <div class="step-card vendor">
+        <div class="step-card vendor" data-step-id="p3-s1">
           <div class="step-owner vendor">&#9679; Immigration Vendor</div>
           <div class="step-name">Entry Permit Application</div>
           <div class="step-detail">Vendor applies for entry permit / visit visa with host country authorities</div>
@@ -854,7 +1114,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card assignee">
+        <div class="step-card assignee" data-step-id="p3-s2">
           <div class="step-owner assignee">&#9679; Assignee</div>
           <div class="step-name">Book Flight</div>
           <div class="step-detail">Assignee books flight once entry permit is issued</div>
@@ -866,7 +1126,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card assignee">
+        <div class="step-card assignee" data-step-id="p3-s3">
           <div class="step-owner assignee">&#9679; Assignee</div>
           <div class="step-name">Arrival in Host Country</div>
           <div class="step-detail">Assignee arrives in UAE / KSA — triggers in-country processing</div>
@@ -891,7 +1151,7 @@
     </div>
     <div class="steps-flow">
       <div class="step-wrapper">
-        <div class="step-card vendor">
+        <div class="step-card vendor" data-step-id="p4-s1">
           <div class="step-owner vendor">&#9679; Immigration Vendor</div>
           <div class="step-name">Medical Examination</div>
           <div class="step-detail">Vendor arranges mandatory medical examination for the assignee</div>
@@ -903,7 +1163,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card vendor">
+        <div class="step-card vendor" data-step-id="p4-s2">
           <div class="step-owner vendor">&#9679; Immigration Vendor</div>
           <div class="step-name">Biometrics</div>
           <div class="step-detail">Vendor arranges biometrics appointment and submission</div>
@@ -915,7 +1175,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card vendor">
+        <div class="step-card vendor" data-step-id="p4-s3">
           <div class="step-owner vendor">&#9679; Immigration Vendor</div>
           <div class="step-name">Labour Contract Signed</div>
           <div class="step-detail">Labour contract drafted and signed by assignee and employer in host country</div>
@@ -927,7 +1187,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card vendor">
+        <div class="step-card vendor" data-step-id="p4-s4">
           <div class="step-owner vendor">&#9679; Immigration Vendor</div>
           <div class="step-name">Residency Visa / Iqama</div>
           <div class="step-detail">Vendor applies for residency visa (UAE) or Iqama (KSA)</div>
@@ -954,7 +1214,7 @@
     </div>
     <div class="steps-flow">
       <div class="step-wrapper">
-        <div class="step-card vendor">
+        <div class="step-card vendor" data-step-id="p5-s1">
           <div class="step-owner vendor">&#9679; Immigration Vendor</div>
           <div class="step-name">Emirates ID / National ID</div>
           <div class="step-detail">Vendor tracks Emirates ID (UAE) or National ID (KSA) application and receipt</div>
@@ -968,7 +1228,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card assignee">
+        <div class="step-card assignee" data-step-id="p5-s2">
           <div class="step-owner assignee">&#9679; Assignee</div>
           <div class="step-name">Open Bank Account</div>
           <div class="step-detail">Assignee opens local bank account (requires Emirates ID)</div>
@@ -980,7 +1240,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card vendor">
+        <div class="step-card vendor" data-step-id="p5-s3">
           <div class="step-owner vendor">&#9679; Relocation Vendor</div>
           <div class="step-name">Accommodation</div>
           <div class="step-detail">Vendor arranges temporary accommodation pre-arrival, then supports permanent housing</div>
@@ -993,7 +1253,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card mobility">
+        <div class="step-card mobility" data-step-id="p5-s4">
           <div class="step-owner mobility">&#9679; Mobility Team</div>
           <div class="step-name">Payroll & Insurance</div>
           <div class="step-detail">Mobility Team sets up host-country payroll and activates health insurance</div>
@@ -1006,7 +1266,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card system">
+        <div class="step-card system" data-step-id="p5-s5">
           <div class="step-owner system">&#9679; System / Auto</div>
           <div class="step-name">Assignment Complete</div>
           <div class="step-detail">All milestones confirmed — status auto-updates to "Done"</div>
@@ -1031,7 +1291,7 @@
     </div>
     <div class="steps-flow">
       <div class="step-wrapper">
-        <div class="step-card system" style="width: 260px;">
+        <div class="step-card system" data-step-id="p6-s1" style="width: 260px;">
           <div class="step-owner system">&#9679; System / Auto</div>
           <div class="step-name">Visa Expiry Monitoring</div>
           <div class="step-detail">Automated alerts to Mobility Team + Immigration Vendor at 90, 60, 30, and 14 days before residency visa expiry</div>
@@ -1040,7 +1300,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card system" style="width: 260px;">
+        <div class="step-card system" data-step-id="p6-s2" style="width: 260px;">
           <div class="step-owner system">&#9679; System / Auto</div>
           <div class="step-name">Labour Contract Expiry</div>
           <div class="step-detail">Automated alerts to HRBP + Mobility Team at 90, 60, 30 days before labour contract end date</div>
@@ -1049,7 +1309,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card system" style="width: 260px;">
+        <div class="step-card system" data-step-id="p6-s3" style="width: 260px;">
           <div class="step-owner system">&#9679; System / Auto</div>
           <div class="step-name">Assignment End Monitoring</div>
           <div class="step-detail">Automated alerts to HRBP, Mobility Team, and Assignee at 90, 60, 30 days before planned assignment end. Triggers extension or repatriation planning.</div>
@@ -1058,7 +1318,7 @@
       </div>
       <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg></div>
       <div class="step-wrapper">
-        <div class="step-card system" style="width: 260px;">
+        <div class="step-card system" data-step-id="p6-s4" style="width: 260px;">
           <div class="step-owner system">&#9679; System / Auto</div>
           <div class="step-name">Travel Restriction Lift</div>
           <div class="step-detail">Notify Mobility Team + Assignee when travel restriction period ends (typically 6 months from visa issue)</div>
@@ -1157,6 +1417,25 @@
 </div>
 
 </div><!-- end #main-content -->
+
+<!-- ═══════════════ COMMENT PANEL (outside #main-content to survive lang toggle) ═══════════════ -->
+<div id="comment-overlay" class="comment-overlay" onclick="closeCommentPanel()"></div>
+<div id="comment-panel" class="comment-panel">
+  <div class="comment-panel-header">
+    <h3 id="comment-panel-title">Step Name</h3>
+    <button class="close-btn" onclick="closeCommentPanel()">&times;</button>
+  </div>
+  <div id="comment-list" class="comment-list"></div>
+  <div class="comment-input-area">
+    <div class="file-drop-zone" id="file-drop-zone" onclick="document.getElementById('file-input').click()">
+      <input type="file" id="file-input" multiple hidden />
+      Drop files or click to attach
+    </div>
+    <div class="file-preview-list" id="file-preview-list"></div>
+    <textarea id="comment-text" placeholder="Add a comment..."></textarea>
+    <button class="send-btn" onclick="submitComment()">Send</button>
+  </div>
+</div>
 
 <script>
 function checkPassword() {
@@ -1526,6 +1805,364 @@ function applyTurkish() {
   var footer = document.querySelector('.footer');
   if (footer) footer.innerHTML = tr['footer'];
 }
+
+// ═══════════════ COMMENT SYSTEM ═══════════════
+
+// ── Step name lookup ──
+var STEP_NAMES = {
+  'p1-s1': 'Assignment Confirmed',
+  'p1-s2': 'Offer Issued',
+  'p1-s3': 'Vendor & Team Assignment',
+  'p1-s4': 'Mobility Intro Call',
+  'p1-s5': 'Vendor Introduction',
+  'p2-s1': 'Document Collection',
+  'p2-s2': 'Document Attestation',
+  'p3-s1': 'Entry Permit Application',
+  'p3-s2': 'Book Flight',
+  'p3-s3': 'Arrival in Host Country',
+  'p4-s1': 'Medical Examination',
+  'p4-s2': 'Biometrics',
+  'p4-s3': 'Labour Contract Signed',
+  'p4-s4': 'Residency Visa / Iqama',
+  'p5-s1': 'Emirates ID / National ID',
+  'p5-s2': 'Open Bank Account',
+  'p5-s3': 'Accommodation',
+  'p5-s4': 'Payroll & Insurance',
+  'p5-s5': 'Assignment Complete',
+  'p6-s1': 'Visa Expiry Monitoring',
+  'p6-s2': 'Labour Contract Expiry',
+  'p6-s3': 'Assignment End Monitoring',
+  'p6-s4': 'Travel Restriction Lift'
+};
+
+// ── Open Questions from the 3 shared Google Sheets ──
+var OPEN_QUESTIONS = {
+  'p1-s1': [
+    'HRBP data gaps: The following HRBP-sourced fields are missing for most Gulf assignees — Employee Name (partially), Employee ID, Division, Job Title, Home Country, Host Country, Assignment Duration, Start Date, and End Date. Can these be exported from your HRIS for all 11 assignees?',
+    'The tracker uses letter codes (A–K) instead of real names. Will Trendyol provide a name-to-code mapping, or should the platform use anonymised IDs?'
+  ],
+  'p1-s2': [
+    'Offer Given Date vs Offer Signed Date — the Gulf tracker has both columns but they are identical for the new batch (26/02/2026). Are these truly the same date, or is one missing?'
+  ],
+  'p1-s3': [
+    'Relocation Vendor and Immigration Vendor are separate columns. For employees C, D, E the value is "-" for both. Does this mean in-house handling, or was vendor assignment skipped?'
+  ],
+  'p1-s4': [
+    'The "Mobility Intro Call Completed" field exists but has no dates — only Y/N. Should the platform track the actual call date?'
+  ],
+  'p2-s1': [
+    'Documents Collected is a simple Y/N field. Should the platform track individual document types (passport, diploma, family book, photos) separately?'
+  ],
+  'p2-s2': [
+    'Attestation has 3 date columns (Status, Start, Done) but no data for any new-batch assignees. Is attestation not yet started, or is data entry lagging?'
+  ],
+  'p3-s1': [
+    'Entry Permit columns exist (Status, Applied Date, Issued Date, Expiry Date) but are empty for all new assignees (F–K). Are applications not yet submitted?',
+    'The Entry Permit Expiry Date column exists in the tracker but has no data even for completed assignees A–E. Is expiry tracked elsewhere?'
+  ],
+  'p4-s1': [
+    'Medical Examination — the completion date column exists but is blank for all assignees including the 5 "Done" ones. Was this data never recorded?'
+  ],
+  'p4-s2': [
+    'Biometrics Completion Date — same issue as medical. No dates recorded for any assignee. Is this tracked in a separate vendor system?'
+  ],
+  'p4-s3': [
+    'Labour Contract column exists but has no data for any Gulf assignee. Employee F has "Labour Contract pending Dilara\'s signature" as a note but the column is empty. Should this be a date or a Y/N field?'
+  ],
+  'p4-s4': [
+    'Residency Visa Status and Issued Date — populated for A–E as "Done" but no actual dates. Should the platform require specific issuance dates?'
+  ],
+  'p5-s1': [
+    'No Emirates ID data exists in the tracker for any assignee (not even the 5 "Done" ones). Is Emirates ID tracked in a different system, or has this never been recorded?'
+  ],
+  'p5-s2': [
+    'No "Bank Account" column exists in the Gulf tracker at all. Should the platform add this as a new milestone, and who is responsible for updating it?'
+  ],
+  'p5-s3': [
+    'Accommodation fields (Temp Arranged, Permanent Secured) are missing from the tracker entirely. Is housing handled outside the mobility process?'
+  ],
+  'p5-s4': [
+    'Payroll Setup and Health Insurance columns exist in the International Payroll sheet but not in the Gulf tracker. Should these be consolidated into one view?',
+    'The International Payroll sheet has "Social Security Registration" and "Tax Registration" columns — are these relevant for UAE/KSA assignees (given zero income tax)?'
+  ],
+  'p5-s5': [
+    'Status values across the tracker are not standardised — "Done", "Started", "Pending", "In Progress", "Completed" are used interchangeably. What should the canonical status list be?'
+  ],
+  'p6-s1': [
+    'Visa expiry dates are not recorded for any assignee. Without these dates, automated renewal alerts cannot be configured. Where does Trendyol track visa expiry today?'
+  ],
+  'p6-s3': [
+    'Assignment End Date is missing for employees F–K. Is this because assignments are open-ended, or because end dates have not been decided?'
+  ],
+  'general': [
+    'The Gulf tracker has no KSA-specific columns (Iqama Number, GOSI Registration, Muqeem Status). Should these be added for Employee K?',
+    'Ownership gaps: Several process steps have no clear owner in the tracker. For example, who is responsible for confirming medical exam completion — the vendor or Mobility Team?',
+    'The International Consolidated List duplicates some Gulf tracker fields but with different formatting and completeness. Which sheet is the source of truth?',
+    'Data entry appears significantly delayed — should the platform enforce real-time updates via vendor/HRBP login, or accept periodic batch uploads?'
+  ]
+};
+
+// ── CommentStore — localStorage abstraction ──
+var CommentStore = (function() {
+  var STORAGE_KEY = 'trendyol-lta-comments';
+
+  function _load() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    } catch (e) { return {}; }
+  }
+
+  function _save(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  return {
+    getComments: function(stepId) {
+      var data = _load();
+      return data[stepId] || [];
+    },
+    addComment: function(stepId, comment) {
+      var data = _load();
+      if (!data[stepId]) data[stepId] = [];
+      comment.id = Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+      comment.timestamp = new Date().toISOString();
+      data[stepId].push(comment);
+      _save(data);
+      return comment;
+    },
+    getCount: function(stepId) {
+      var data = _load();
+      return (data[stepId] || []).length;
+    },
+    getAllCounts: function() {
+      var data = _load();
+      var counts = {};
+      for (var k in data) { counts[k] = data[k].length; }
+      return counts;
+    },
+    getAll: function() { return _load(); },
+    importData: function(json) {
+      try { _save(typeof json === 'string' ? JSON.parse(json) : json); return true; }
+      catch (e) { return false; }
+    }
+  };
+})();
+
+// ── Panel state ──
+var currentStepId = null;
+var pendingFiles = [];
+
+// ── Open / Close Panel ──
+function openCommentPanel(stepId) {
+  currentStepId = stepId;
+  pendingFiles = [];
+
+  var title = STEP_NAMES[stepId] || stepId;
+  document.getElementById('comment-panel-title').textContent = title;
+  document.getElementById('comment-text').value = '';
+  document.getElementById('file-preview-list').innerHTML = '';
+
+  renderComments(stepId);
+
+  document.getElementById('comment-panel').classList.add('open');
+  document.getElementById('comment-overlay').classList.add('open');
+}
+
+function closeCommentPanel() {
+  document.getElementById('comment-panel').classList.remove('open');
+  document.getElementById('comment-overlay').classList.remove('open');
+  currentStepId = null;
+  pendingFiles = [];
+}
+
+// ── Render comments + seed questions ──
+function renderComments(stepId) {
+  var list = document.getElementById('comment-list');
+  list.innerHTML = '';
+
+  // Seed questions first
+  var seeds = OPEN_QUESTIONS[stepId] || [];
+  seeds.forEach(function(q) {
+    var div = document.createElement('div');
+    div.className = 'comment-bubble seed';
+    div.innerHTML =
+      '<div class="comment-avatar">TC</div>' +
+      '<div class="comment-body">' +
+        '<div class="comment-meta">' +
+          '<span class="comment-author">The Cozm</span>' +
+          '<span class="seed-label">Open Question</span>' +
+        '</div>' +
+        '<div class="comment-text">' + escapeHtml(q) + '</div>' +
+      '</div>';
+    list.appendChild(div);
+  });
+
+  // User comments
+  var comments = CommentStore.getComments(stepId);
+  comments.forEach(function(c) {
+    var initials = (c.author || 'U').split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().substr(0,2);
+    var time = formatCommentTime(c.timestamp);
+    var filesHtml = '';
+    if (c.files && c.files.length) {
+      filesHtml = '<div class="comment-files">';
+      c.files.forEach(function(f) {
+        filesHtml += '<a class="file-chip" href="' + f.data + '" download="' + escapeHtml(f.name) + '">&#128206; ' + escapeHtml(f.name) + '</a>';
+      });
+      filesHtml += '</div>';
+    }
+
+    var div = document.createElement('div');
+    div.className = 'comment-bubble';
+    div.innerHTML =
+      '<div class="comment-avatar">' + initials + '</div>' +
+      '<div class="comment-body">' +
+        '<div class="comment-meta">' +
+          '<span class="comment-author">' + escapeHtml(c.author || 'User') + '</span>' +
+          '<span class="comment-time">' + time + '</span>' +
+        '</div>' +
+        '<div class="comment-text">' + escapeHtml(c.text) + '</div>' +
+        filesHtml +
+      '</div>';
+    list.appendChild(div);
+  });
+
+  // Scroll to bottom
+  list.scrollTop = list.scrollHeight;
+}
+
+// ── Submit comment ──
+function submitComment() {
+  var text = document.getElementById('comment-text').value.trim();
+  if (!text && pendingFiles.length === 0) return;
+  if (!currentStepId) return;
+
+  CommentStore.addComment(currentStepId, {
+    author: 'Trendyol Team',
+    text: text,
+    files: pendingFiles.slice()
+  });
+
+  document.getElementById('comment-text').value = '';
+  pendingFiles = [];
+  document.getElementById('file-preview-list').innerHTML = '';
+
+  renderComments(currentStepId);
+  renderCommentBadges();
+}
+
+// ── Comment badges on step cards ──
+function renderCommentBadges() {
+  // Remove existing badges
+  document.querySelectorAll('.comment-badge').forEach(function(b) { b.remove(); });
+
+  var counts = CommentStore.getAllCounts();
+  var cards = document.querySelectorAll('.step-card[data-step-id]');
+  cards.forEach(function(card) {
+    var sid = card.dataset.stepId;
+    var userCount = counts[sid] || 0;
+    var seedCount = (OPEN_QUESTIONS[sid] || []).length;
+    var total = userCount + seedCount;
+    if (total > 0) {
+      var badge = document.createElement('div');
+      badge.className = 'comment-badge';
+      badge.textContent = total;
+      card.appendChild(badge);
+    }
+  });
+}
+
+// ── File handling ──
+document.getElementById('file-input').addEventListener('change', function(e) {
+  handleFiles(e.target.files);
+  e.target.value = '';
+});
+
+var dropZone = document.getElementById('file-drop-zone');
+dropZone.addEventListener('dragover', function(e) {
+  e.preventDefault();
+  dropZone.classList.add('dragover');
+});
+dropZone.addEventListener('dragleave', function() {
+  dropZone.classList.remove('dragover');
+});
+dropZone.addEventListener('drop', function(e) {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+function handleFiles(fileList) {
+  Array.from(fileList).forEach(function(file) {
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File "' + file.name + '" exceeds 5 MB limit.');
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      pendingFiles.push({ name: file.name, data: e.target.result, size: file.size });
+      renderFilePreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderFilePreviews() {
+  var container = document.getElementById('file-preview-list');
+  container.innerHTML = '';
+  pendingFiles.forEach(function(f, idx) {
+    var div = document.createElement('div');
+    div.className = 'file-preview-item';
+    div.innerHTML = '&#128206; ' + escapeHtml(f.name) + ' <span class="remove-file" onclick="removePendingFile(' + idx + ')">&times;</span>';
+    container.appendChild(div);
+  });
+}
+
+function removePendingFile(idx) {
+  pendingFiles.splice(idx, 1);
+  renderFilePreviews();
+}
+
+// ── Utilities ──
+function escapeHtml(str) {
+  var d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function formatCommentTime(iso) {
+  try {
+    var d = new Date(iso);
+    var day = d.getDate();
+    var mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+    var h = d.getHours().toString().padStart(2,'0');
+    var m = d.getMinutes().toString().padStart(2,'0');
+    return day + ' ' + mon + ' ' + h + ':' + m;
+  } catch(e) { return ''; }
+}
+
+// ── Event delegation for step card clicks ──
+document.addEventListener('click', function(e) {
+  // Only handle clicks when panel is not open (avoid re-triggering)
+  var card = e.target.closest('.step-card[data-step-id]');
+  if (!card) return;
+  // Don't trigger if clicking toggle buttons or alert badges
+  if (e.target.closest('.toggle-btn') || e.target.closest('.alert-badge')) return;
+  openCommentPanel(card.dataset.stepId);
+});
+
+// ── Language toggle integration ──
+// Patch setLang to remove/restore badges
+var _originalSetLang = setLang;
+setLang = function(lang) {
+  // Remove badges before snapshot
+  document.querySelectorAll('.comment-badge').forEach(function(b) { b.remove(); });
+  _originalSetLang(lang);
+  // Re-add badges after restore
+  renderCommentBadges();
+};
+
+// ── Initialise badges on load ──
+renderCommentBadges();
 </script>
 
 </body>
